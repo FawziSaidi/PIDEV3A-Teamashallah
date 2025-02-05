@@ -4,9 +4,9 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,7 +17,15 @@ class UserType extends AbstractType
         $builder
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
-        ;
+            ->add('role', ChoiceType::class, [
+                'choices' => [
+                    'Student' => 'Student',
+                    'Teacher' => 'Teacher',
+                    'Administrator' => 'Administrator',
+                    'HRM' => 'HRM',
+                ],
+                'mapped' => false, // This field is not mapped to the User entity
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

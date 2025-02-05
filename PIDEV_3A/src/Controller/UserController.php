@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Student; // Or whichever type of user we want
+use App\Entity\Student;
+use App\Entity\Teacher;
+use App\Entity\Administrator;
+use App\Entity\HRM;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,16 +16,37 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user')]
+    #[Route('/index', name: 'index')]
     public function index(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
-        $user = new Student(); // Create a Student instead of a generic User
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $role = $form->get('role')->getData();
+            $email = $form->get('email')->getData();
+            $password = $form->get('password')->getData();
 
-            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
+            // Create the appropriate user entity based on the selected role
+            switch ($role) {
+                case 'Student':
+                    $user = new Student();
+                    break;
+                case 'Teacher':
+                    $user = new Teacher();
+                    break;
+                case 'Administrator':
+                    $user = new Administrator();
+                    break;
+                case 'HRM':
+                    $user = new HRM();
+                    break;
+                default:
+                    throw new \Exception('Invalid role selected');
+            }
+
+            $user->setEmail($email);
+            $hashedPassword = $passwordHasher->hashPassword($user, $password);
             $user->setPassword($hashedPassword);
 
             $now = new \DateTimeImmutable();
@@ -34,7 +58,7 @@ class UserController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'User registered successfully!');
-            return $this->redirectToRoute('app_user');
+            return $this->redirectToRoute('index');
         }
 
         return $this->render('user/index.html.twig', [
