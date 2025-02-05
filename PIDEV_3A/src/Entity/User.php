@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType("SINGLE_TABLE")]
@@ -14,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
     "HRM" => HRM::class,
     "Administrator" => Administrator::class
 ])]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -84,6 +87,18 @@ class User
         return $this;
     }
 
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->modifiedAt = new \DateTimeImmutable();
+    }
+    #[ORM\PreUpdate]
+    public function setModifiedAtValue(): void
+    {
+        $this->modifiedAt = new \DateTimeImmutable();
+    }
+    
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -128,5 +143,27 @@ class User
         $this->profile = $profile;
 
         return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    // You might also need to implement these methods if they're not already present
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function getSalt(): ?string
+    {
+        // You don't need to use a salt with modern password hashing
+        return null;
     }
 }
