@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Edit Forum</h1>
+    {{ form_start(form) }}
+<div>
+        {{ form_label(form.titleForum) }}
+        {{ form_widget(form.titleForum) }}
+    </div>
+
+    <div>
+        {{ form_label(form.descriptionForum) }}
+        {{ form_widget(form.descriptionForum) }}
+    </div>
+
+    <div>
+        {{ form_label(form.category) }}
+        {{ form_widget(form.category) }}
+    </div>
+            <button type="submit">Save</button>
+    {{ form_end(form) }}
+    <a href="{{ path('forum_index') }}">Back to list</a>
+{% endblock %}
