@@ -15,11 +15,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
@@ -64,7 +65,7 @@ class RegistrationController extends AbstractController
                     $user = new User();
             }
     
-            // Set common fields for all roles
+            //Common fields to all users (any role.)
             $user->setEmail($formUser->getEmail());
             $user->setFirstName($formUser->getFirstName());
             $user->setLastName($formUser->getLastName());
@@ -79,6 +80,24 @@ class RegistrationController extends AbstractController
             $user->setPhoneNumber($form->get('phone_number')->getData());
             $user->setBio($form->get('bio')->getData());
             $user->setAdress($form->get('adress')->getData());
+
+            $avatarFile = $form->get('avatar')->getData();
+            if ($avatarFile) {
+                $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$avatarFile->guessExtension();
+
+                try {
+                    $avatarFile->move(
+                        $this->getParameter('avatars_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload, normalement rien ne devrait se passer unless PHP bugs (pls don't)
+                }
+
+                $user->setAvatar($newFilename);
+            }
     
             $entityManager->persist($user);
             $entityManager->flush();

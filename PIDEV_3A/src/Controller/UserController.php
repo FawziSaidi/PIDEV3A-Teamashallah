@@ -53,25 +53,61 @@ class UserController extends AbstractController
     public function updateUser(Request $request, EntityManagerInterface $entityManager, int $id): Response
     {
         $user = $entityManager->getRepository(User::class)->find($id);
-
+    
         if (!$user) {
             throw $this->createNotFoundException('User not found');
         }
-
+    
         // Check if the current user is the same as the user being updated
         if ($this->security->getUser() !== $user) {
             throw $this->createAccessDeniedException('You can only update your own profile');
         }
-
+    
+        $modifiedFields = [];
+    
         $email = $request->request->get('email');
-        if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if ($email && filter_var($email, FILTER_VALIDATE_EMAIL) && $email !== $user->getEmail()) {
             $user->setEmail($email);
-            $entityManager->flush();
-            $this->addFlash('success', 'Email updated successfully');
-        } else {
-            $this->addFlash('error', 'Invalid email address');
+            $modifiedFields[] = 'Email';
         }
-
+    
+        $firstName = $request->request->get('first_name');
+        if ($firstName && $firstName !== $user->getFirstName()) {
+            $user->setFirstName($firstName);
+            $modifiedFields[] = 'First Name';
+        }
+    
+        $lastName = $request->request->get('last_name');
+        if ($lastName && $lastName !== $user->getLastName()) {
+            $user->setLastName($lastName);
+            $modifiedFields[] = 'Last Name';
+        }
+    
+        $address = $request->request->get('address');
+        if ($address && $address !== $user->getAdress()) {
+            $user->setAdress($address);
+            $modifiedFields[] = 'Address';
+        }
+    
+        $phoneNumber = $request->request->get('phone_number');
+        if ($phoneNumber && $phoneNumber !== $user->getPhoneNumber()) {
+            $user->setPhoneNumber($phoneNumber);
+            $modifiedFields[] = 'Phone Number';
+        }
+    
+        $bio = $request->request->get('bio');
+        if ($bio && $bio !== $user->getBio()) {
+            $user->setBio($bio);
+            $modifiedFields[] = 'Bio';
+        }
+    
+        if (!empty($modifiedFields)) {
+            $entityManager->flush();
+            $this->addFlash('success', 'Profile updated successfully. Modified fields: ' . implode(', ', $modifiedFields));
+        } else {
+            $this->addFlash('info', 'No changes were made to your profile.');
+        }
+    
         return $this->redirectToRoute('profile');
     }
 }
