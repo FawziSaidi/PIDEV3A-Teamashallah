@@ -1,7 +1,7 @@
 {% extends 'event/BaseAddEvent.html.twig' %}
 
 {% block add %}
-
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }} 
 {{form(form)}}
 
 {% endblock %}

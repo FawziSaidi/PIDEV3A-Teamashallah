@@ -60,7 +60,7 @@ class Event
     #[Assert\NotBlank]
     #[Assert\GreaterThanOrEqual(
         value: 10,
-        message: 'Available seats should be greater than or equan to {{ compared_value }}',
+        message: 'Available seats should be greater than or equal to {{ compared_value }}',
     )]
     #[ORM\Column]
     private ?int $available_seats = null;
