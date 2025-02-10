@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -44,9 +45,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(groups: ['Student'])]
     protected ?string $first_name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(groups: ['Student'])]
     protected ?string $last_name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -227,4 +230,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->createdAt = new \DateTimeImmutable();
     }
+
+
 }

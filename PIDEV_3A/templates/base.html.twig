@@ -130,23 +130,90 @@
             <div class="modal-body">
                 <div class="login">
                     {{ form_start(registrationForm) }}
-                        {{ form_row(registrationForm.email) }}
-                        {{ form_row(registrationForm.plainPassword, {
-                            label: 'Password'
-                        }) }}
                         {{ form_row(registrationForm.role, {
                             label: 'Role',
-                            'attr': {'class': 'form-control'}
+                            'attr': {'class': 'form-control', 'id': 'registration_form_role'}
                         }) }}
-                        {{ form_row(registrationForm.agreeTerms) }}
-                        <button type="submit" class="btn btn-primary">SIGN UP</button>
+                        
+                        <div id="common-fields" style="display: none;">
+                            {{ form_row(registrationForm.email) }}
+                            {{ form_row(registrationForm.plainPassword, {
+                                label: 'Password'
+                            }) }}
+                            {{ form_row(registrationForm.first_name) }}
+                            {{ form_row(registrationForm.last_name) }}
+                            {{ form_row(registrationForm.bio) }}
+                            {{ form_row(registrationForm.phone_number) }}
+                            {{ form_row(registrationForm.adress) }}
+                        </div>
+
+                        <div id="student-fields" style="display: none;">
+                            {{ form_row(registrationForm.date_of_birth) }}
+                            {{ form_row(registrationForm.year_of_study) }}
+                            {{ form_row(registrationForm.courses_enrolled) }}
+                            {{ form_row(registrationForm.certifications) }}
+                            {{ form_row(registrationForm.diplomas) }}
+                        </div>
+
+                        <div id="teacher-fields" style="display: none;">
+                            {{ form_row(registrationForm.specialization) }}
+                            {{ form_row(registrationForm.years_of_experience) }}
+                        </div>
+
+                        <div id="hrm-club-fields" style="display: none;">
+                            {{ form_row(registrationForm.event) }}
+                        </div>
+
+                        <div id="hrm-stage-fields" style="display: none;">
+                            {{ form_row(registrationForm.company) }}
+                        </div>
+                        
+                        <div id="terms-and-submit" style="display: none;">
+                            {{ form_row(registrationForm.agreeTerms) }}
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
                     {{ form_end(registrationForm) }}
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Modal -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var roleSelect = document.getElementById('registration_form_role');
+    var commonFields = document.getElementById('common-fields');
+    var studentFields = document.getElementById('student-fields');
+    var teacherFields = document.getElementById('teacher-fields');
+    var hrmClubFields = document.getElementById('hrm-club-fields');
+    var hrmStageFields = document.getElementById('hrm-stage-fields');
+    var termsAndSubmit = document.getElementById('terms-and-submit');
+
+    roleSelect.addEventListener('change', function() {
+        commonFields.style.display = 'block';
+        termsAndSubmit.style.display = 'block';
+        studentFields.style.display = 'none';
+        teacherFields.style.display = 'none';
+        hrmClubFields.style.display = 'none';
+        hrmStageFields.style.display = 'none';
+
+        switch(this.value) {
+            case 'ROLE_STUDENT':
+                studentFields.style.display = 'block';
+                break;
+            case 'ROLE_TEACHER':
+                teacherFields.style.display = 'block';
+                break;
+            case 'ROLE_HRM_CLUB':
+                hrmClubFields.style.display = 'block';
+                break;
+            case 'ROLE_HRM_STAGE':
+                hrmStageFields.style.display = 'block';
+                break;
+        }
+    });
+});
+</script>
 <!-- Login Modal -->
 <li class="list-inline-item">
     <a class="text-uppercase text-color p-sm-2 py-2 px-0 d-inline-block" href="#" data-toggle="modal" data-target="#loginModal">login</a>

@@ -23,53 +23,70 @@ class RegistrationController extends AbstractController
     {
         $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $role = $form->get('role')->getData();
+            $formUser = $form->getData();
+    
             if (!in_array($role, ['ROLE_STUDENT', 'ROLE_TEACHER', 'ROLE_HRM_CLUB', 'ROLE_HRM_STAGE'])) {
                 throw new AccessDeniedException('Invalid role selected.');
             }
-
-            // Create the appropriate entity based on the role
+    
             switch ($role) {
                 case 'ROLE_STUDENT':
                     $user = new Student();
+                    $user->setDateOfBirth($form->get('date_of_birth')->getData());
+                    $user->setYearOfStudy($form->get('year_of_study')->getData());
+                    
+                    $coursesEnrolled = $form->get('courses_enrolled')->getData();
+                    $user->setCoursesEnrolled($coursesEnrolled ? explode(',', $coursesEnrolled) : null);
+                    
+                    $certifications = $form->get('certifications')->getData();
+                    $user->setCertifications($certifications ? explode(',', $certifications) : null);
+                    
+                    $diplomas = $form->get('diplomas')->getData();
+                    $user->setDiplomas($diplomas ? explode(',', $diplomas) : null);
                     break;
                 case 'ROLE_TEACHER':
                     $user = new Teacher();
+                    $user->setSpecialization($form->get('specialization')->getData());
+                    $user->setYearsOfExperience($form->get('years_of_experience')->getData());
                     break;
                 case 'ROLE_HRM_CLUB':
                     $user = new HRMClub();
+                    $user->setEvent($form->get('event')->getData());
                     break;
                 case 'ROLE_HRM_STAGE':
                     $user = new HRMStage();
+                    $user->setCompany($form->get('company')->getData());
                     break;
                 default:
                     $user = new User();
             }
-
-            $user->setEmail($form->get('email')->getData());
+    
+            // Set common fields for all roles
+            $user->setEmail($formUser->getEmail());
+            $user->setFirstName($formUser->getFirstName());
+            $user->setLastName($formUser->getLastName());
             $user->setRoles([$role]);
-
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
-
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-
-            // Set the created_at field
-            $user->setCreatedAt(new \DateTimeImmutable());
-
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+            $user->setCreatedAt(new \DateTimeImmutable());    
+            $user->setPhoneNumber($form->get('phone_number')->getData());
+            $user->setBio($form->get('bio')->getData());
+            $user->setAdress($form->get('adress')->getData());
+    
             $entityManager->persist($user);
             $entityManager->flush();
-
-            // do anything else you need here, like send an email
-
+    
             $this->addFlash('success', 'Your account has been created successfully.');
-
             return $this->redirectToRoute('homepage');
         }
-
+    
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
