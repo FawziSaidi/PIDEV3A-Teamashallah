@@ -1,0 +1,77 @@
+{% extends 'event/BaseListOfEvents.html.twig' %}
+
+{% block title %}  <title>Cerebro - Events</title> {% endblock %}
+
+
+
+{% block pagetitle %}
+<!-- page title -->
+<section class="page-title-section overlay" data-background="{{ asset('images/backgrounds/page-title.jpg') }}">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <ul class="list-inline custom-breadcrumb">
+          <li class="list-inline-item"><a class="h2 text-primary font-secondary" href="@@page-link">Upcoming Events</a></li>
+          <li class="list-inline-item text-white h3 font-secondary @@nasted"></li>
+        </ul>
+        <p class="text-lighten">
+          Our courses offer a good compromise between the continuous assessment favoured by some universities and the emphasis placed on final exams by others.
+        </p>
+        
+        <!-- Search Form -->
+        <form method="post" action="/SearchEvent" class="mt-3">
+          <label for="search" class="text-white">Search</label>
+          <div class="input-group">
+            <input type="text" name="title" id="search" class="form-control" placeholder="Search event...">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </div>
+        </form>
+        <!-- /Search Form -->
+
+        <!-- Add Event Button -->
+        <a href="{{ path('AddEvent') }}" class="btn btn-primary btn-lg mt-4 px-4 shadow-sm text-white" style="background-color: #ff9800; border: none; border-radius: 30px;">
+          Add Event
+        </a>
+        <!-- /Add Event Button -->
+
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /page title -->
+{% endblock %}
+
+
+
+{% block events %}
+{% for event in events %}
+<div class="col-lg-4 col-sm-6 mb-5">
+  <div class="card border-0 rounded-0 hover-shadow">
+    <div class="card-img position-relative">
+      <img class="card-img-top rounded-0" src="{{ asset('uploads/images/' ~ event.poster) }}" alt="Affiche de l'événement">
+      <div class="card-date">
+        <span>{{ event.date|date('d') }}</span><br>{{ event.date|date('F') }}
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- location -->
+      <p><i class="ti-location-pin text-primary mr-2"></i>{{ event.location }}</p>
+      <a href="{{ path('UpdateEvent', {'id': event.id}) }}">
+        <h4 class="card-title">{{ event.title }}</h4>
+      </a>
+      <p>{{ event.description|slice(0, 100) ~ '...' }}</p>
+      <p><strong>Available places: </strong> {{ event.availableSeats }}</p>
+      <div class="mt-3">
+        <a href="{{ path('UpdateEvent', {'id': event.id}) }}" class="btn btn-sm btn-primary">Update</a>
+        <a href="{{ path('DeleteEvent', {'id': event.id}) }}" class="btn btn-sm btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<p class="text-center">No events available at the moment.</p>
+{% endfor %}
+{% endblock %}
+
