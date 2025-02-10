@@ -1,0 +1,88 @@
+{% extends 'offer/Base_Offer_Details.html.twig' %}
+
+{% block Offer_Details %}
+	<!-- offer info -->
+	<div class="row align-items-center mb-5">
+		<div class="col-xl-3 order-1 col-sm-6 mb-4 mb-xl-0">
+			<h2>{{ offer.title }}</h2>
+		</div>
+		<div class="col-xl-6 order-sm-3 order-xl-2 col-12 order-2">
+			<ul class="list-inline text-xl-center">
+				<li class="list-inline-item mr-4 mb-3 mb-sm-0">
+					<div class="d-flex align-items-center">
+						<i class="ti-book text-primary icon-md mr-2"></i>
+						<div class="text-left">
+							<h6 class="mb-0">TYPE</h6>
+							<p class="mb-0">{{ offer.type }}</p>
+						</div>
+					</div>
+				</li>
+				<li class="list-inline-item mr-4 mb-3 mb-sm-0">
+					<div class="d-flex align-items-center">
+						<i class="ti-alarm-clock text-primary icon-md mr-2"></i>
+						<div class="text-left">
+							<h6 class="mb-0">DURATION</h6>
+							<p class="mb-0">{{ offer.duration }}</p>
+						</div>
+					</div>
+				</li>
+				<li class="list-inline-item mr-4 mb-3 mb-sm-0">
+					<div class="d-flex align-items-center">
+						<i class="ti-calendar text-primary icon-md mr-2"></i>
+						<div class="text-left">
+							<h6 class="mb-0">PUBLICATION DATE</h6>
+							<p class="mb-0">{{ offer.publicationDate|date('Y-m-d') }}</p>
+						</div>
+					</div>
+				</li>
+				<li class="list-inline-item mr-4 mb-3 mb-sm-0">
+					<div class="d-flex align-items-center">
+						<i class="ti-calendar text-primary icon-md mr-2"></i>
+						<div class="text-left">
+							<h6 class="mb-0">EXPIRATION DATE</h6>
+							<p class="mb-0">{{ offer.expirationDate|date('Y-m-d') }}</p>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="col-xl-3 text-sm-right text-left order-sm-2 order-3 order-xl-3 col-sm-6 mb-4 mb-xl-0">
+			<a href="#" class="btn btn-primary">Apply now</a>
+		</div>
+		<!-- border -->
+		<div class="col-12 mt-4 order-4">
+			<div class="border-bottom border-primary"></div>
+		</div>
+	</div>
+	<!-- offer details -->
+	<div class="row">
+		<div class="col-12 mb-4">
+			<h3>About Course</h3>
+			<p>{{ offer.description }}</p>
+		</div>
+		<div class="col-12 mb-4">
+			<h3 class="mb-3">Desired Skills</h3>
+			<div class="col-12 px-0">
+				<div class="row">
+					<div class="col-md-6">
+							{{ offer.desiredSkills }}
+						<ul class="list-styled">
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 mb-4">
+			<h3 class="mb-3">How to Apply</h3>
+			<ul class="list-styled">
+				<li>Submit your application through the "Apply now" button above.</li>
+				<li>Ensure your CV and cover letter are up-to-date.</li>
+				<li>Prepare for a potential interview by reviewing the desired skills.</li>
+			</ul>
+		</div>
+		<div class="col-12 mb-5">
+			<h3>Additional Information</h3>
+			<p>For more details about this offer, please contact the HR department with the reference ID: {{ offer.hrm.id }}.</p>
+		</div>
+	</div>
+{% endblock %}
