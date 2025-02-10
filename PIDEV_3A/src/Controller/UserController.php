@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -107,7 +108,7 @@ class UserController extends AbstractController
         } else {
             $this->addFlash('info', 'No changes were made to your profile.');
         }
-    
+
         return $this->redirectToRoute('profile');
     }
 }

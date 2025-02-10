@@ -65,7 +65,7 @@ class RegistrationController extends AbstractController
                     $user = new User();
             }
     
-            //Common fields to all users (any role.)
+            //Common fields to all users (any.)
             $user->setEmail($formUser->getEmail());
             $user->setFirstName($formUser->getFirstName());
             $user->setLastName($formUser->getLastName());
