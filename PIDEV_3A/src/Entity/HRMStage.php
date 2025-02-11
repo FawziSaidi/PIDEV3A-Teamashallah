@@ -4,12 +4,27 @@ namespace App\Entity;
 
 use App\Repository\HRMStageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: HRMStageRepository::class)]
 class HRMStage extends User
 {
     #[ORM\Column(length: 255)]
     private ?string $company = null;
+
+    /**
+     * @var Collection<int, Offer>
+     */
+    #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'hrm')]
+    private Collection $offers;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setRoles(['ROLE_HRM_STAGE']);
+        $this->offers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -28,9 +43,34 @@ class HRMStage extends User
         return $this;
     }
 
-    public function __construct()
+    /**
+     * @return Collection<int, Offer>
+     */
+    public function getOffers(): Collection
     {
-        parent::__construct();
-        $this->setRoles(['ROLE_HRM_STAGE']);
+        return $this->offers;
     }
+
+    public function addOffer(Offer $offer): static
+    {
+        if (!$this->offers->contains($offer)) {
+            $this->offers->add($offer);
+            $offer->setHrm($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(Offer $offer): static
+    {
+        if ($this->offers->removeElement($offer)) {
+            // set the owning side to null (unless already changed)
+            if ($offer->getHrm() === $this) {
+                $offer->setHrm(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

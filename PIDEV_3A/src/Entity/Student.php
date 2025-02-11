@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\StudentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: StudentRepository::class)]
 class Student extends User
@@ -93,5 +95,44 @@ class Student extends User
     {
         parent::__construct();
         $this->setRoles(['ROLE_STUDENT']);
+        $this->applications = new ArrayCollection();
+    }
+
+    // ATTRIBUTS NECESSAIRES A OFFRE.
+
+    /**
+     * @var Collection<int, Application>
+     */
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'student')]
+    private Collection $applications;
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplication(Application $application): static
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplication(Application $application): static
+    {
+        if ($this->applications->removeElement($application)) {
+            // set the owning side to null (unless already changed)
+            if ($application->getStudent() === $this) {
+                $application->setStudent(null);
+            }
+        }
+
+        return $this;
     }
 }
