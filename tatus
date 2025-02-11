@@ -1,0 +1,25 @@
+*   [33m68fd208[m[33m ([m[1;36mHEAD -> [m[1;32mintegration/user-hm[m[33m)[m Merge remote-tracking branch 'origin/feat/offer-crud-template' into integration/user-hm
+[31m|[m[32m\[m  
+[31m|[m * [33mea5e677[m[33m ([m[1;31morigin/feat/offer-crud-template[m[33m)[m feat(Offer): Complete CRUD & initial template integration
+* [33m675933b[m[33m ([m[1;31morigin/feat/new_user[m[33m, [m[1;32mfeat/new_user[m[33m)[m Final commit before integration of user and HRM
+[32m|[m * [33mde12361[m[33m ([m[1;35mrefs/stash[m[33m)[m WIP on feat/new_user: d1c7968 Adding asserts to the creation process
+[32m|[m[32m/[m[34m|[m 
+[32m|[m * [33m1d1e13e[m index on feat/new_user: d1c7968 Adding asserts to the creation process
+[32m|[m[32m/[m  
+* [33md1c7968[m Adding asserts to the creation process
+* [33m3432463[m Fully working RT Update of the user in the profile
+* [33m2caa290[m Fully functional C-UD for the 4 entities, registration included
+* [33me29fead[m Ajout des 4 entités Student, Teacher, HRMStage, HRMClub. Migration vers la nouvelle version de la DB. CRUD du Student et du HRMClub : fonctionnel
+* [33mbc3a141[m Fixing the index design
+* [33m3407903[m USER UPDATE : DONE (email only)
+* [33m8c5798f[m Functioning dashboard (no design) with READ and DELETE, Creation is working since Registration, lacking UPDATE
+* [33m07d9615[m Fully functional register - login
+* [33m0d4e8ef[m Working login
+* [33m199204a[m Fully functional user registration and login.
+[34m|[m * [33m94975fa[m[33m ([m[1;31morigin/feat/event-crud-template[m[33m)[m feat(Event): Complete CRUD & initial template integration
+[34m|[m * [33m507b5ea[m Event entity: crud + search
+[34m|[m * [33me232b20[m[33m ([m[1;31morigin/feat/ForumModule[m[33m)[m Implement Forum Entity CRUD with Controller, Design, Input Validation, and Template Integration
+[34m|[m[34m/[m  
+[34m|[m * [33m924100a[m[33m ([m[1;31morigin/feat/course[m[33m)[m Add course feature
+[34m|[m[34m/[m  
+* [33mf66476e[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Common project setup
