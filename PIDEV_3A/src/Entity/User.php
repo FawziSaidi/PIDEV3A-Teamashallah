@@ -30,8 +30,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Assert\NotBlank(message: "Email should not be blank")]
-    #[Assert\Email(message: "The email '{{ value }}' is not a valid email.")]
     protected ?string $email = null;
 
     /**
@@ -44,41 +42,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Assert\NotBlank(message: "Password should not be blank")]
-    #[Assert\Length(
-        min: 6,
-        max: 4096,
-        minMessage: "Your password must be at least {{ limit }} characters long",
-        maxMessage: "Your password cannot be longer than {{ limit }} characters"
-    )]
     protected ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank(groups: ['Student'], message: "First name should not be blank")]
-    #[Assert\Length(
-        min: 2,
-        max: 50,
-        minMessage: "First name must be at least {{ limit }} characters long",
-        maxMessage: "First name cannot be longer than {{ limit }} characters"
-    )]
+    #[Assert\NotBlank(groups: ['Student'])]
     protected ?string $first_name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank(groups: ['Student'], message: "Last name should not be blank")]
-    #[Assert\Length(
-        min: 2,
-        max: 50,
-        minMessage: "Last name must be at least {{ limit }} characters long",
-        maxMessage: "Last name cannot be longer than {{ limit }} characters"
-    )]
+    #[Assert\NotBlank(groups: ['Student'])]
     protected ?string $last_name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\File(
-        maxSize: "1024k",
-        mimeTypes: ["image/jpeg", "image/png"],
-        mimeTypesMessage: "Please upload a valid JPEG or PNG image"
-    )]
     protected ?string $avatar = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -256,6 +230,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->createdAt = new \DateTimeImmutable();
     }
-
-
 }

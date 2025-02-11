@@ -16,23 +16,39 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class RegistrationController extends AbstractController
 {
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+        $this->logger->info('Registration process started');
+
         $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->logger->info('Form submitted and valid');
+
             $role = $form->get('role')->getData();
             $formUser = $form->getData();
     
             if (!in_array($role, ['ROLE_STUDENT', 'ROLE_TEACHER', 'ROLE_HRM_CLUB', 'ROLE_HRM_STAGE'])) {
+                $this->logger->error('Invalid role selected: ' . $role);
                 throw new AccessDeniedException('Invalid role selected.');
             }
     
+            $this->logger->info('Creating user with role: ' . $role);
+
             switch ($role) {
                 case 'ROLE_STUDENT':
                     $user = new Student();
@@ -92,18 +108,29 @@ class RegistrationController extends AbstractController
                         $this->getParameter('avatars_directory'),
                         $newFilename
                     );
+                    $user->setAvatar($newFilename);
+                    $this->logger->info('Avatar file uploaded successfully');
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload, normalement rien ne devrait se passer unless PHP bugs (pls don't)
+                    $this->logger->error('Error uploading avatar file: ' . $e->getMessage());
                 }
-
-                $user->setAvatar($newFilename);
             }
     
-            $entityManager->persist($user);
-            $entityManager->flush();
+            try {
+                $entityManager->persist($user);
+                $entityManager->flush();
+                $this->logger->info('User persisted successfully: ' . $user->getId());
+            } catch (\Exception $e) {
+                $this->logger->error('Error persisting user: ' . $e->getMessage());
+                throw $e;
+            }
     
             $this->addFlash('success', 'Your account has been created successfully.');
             return $this->redirectToRoute('homepage');
+        } elseif ($form->isSubmitted()) {
+            $this->logger->warning('Form submitted but invalid');
+            foreach ($form->getErrors(true) as $error) {
+                $this->logger->warning($error->getMessage());
+            }
         }
     
         return $this->render('registration/register.html.twig', [
