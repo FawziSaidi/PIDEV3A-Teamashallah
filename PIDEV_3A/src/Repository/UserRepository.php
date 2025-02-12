@@ -33,6 +33,46 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function countUsersCreatedLast24Hours(): int
+    {
+        $yesterday = new \DateTime('-24 hours');
+
+        return $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.created_at >= :yesterday')
+            ->setParameter('yesterday', $yesterday)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function getUserIncreaseLastWeek(): array
+    {
+        $oneWeekAgo = new \DateTime('-1 week');
+        $now = new \DateTime();
+
+        $qb = $this->createQueryBuilder('u');
+
+        $totalUsers = $qb
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $newUsers = $qb
+            ->select('COUNT(u.id)')
+            ->where('u.created_at BETWEEN :oneWeekAgo AND :now')
+            ->setParameter('oneWeekAgo', $oneWeekAgo)
+            ->setParameter('now', $now)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $increasePercentage = ($totalUsers > 0) ? ($newUsers / $totalUsers) * 100 : 0;
+
+        return [
+            'totalUsers' => $totalUsers,
+            'newUsers' => $newUsers,
+            'increasePercentage' => round($increasePercentage, 2)
+        ];
+    }
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

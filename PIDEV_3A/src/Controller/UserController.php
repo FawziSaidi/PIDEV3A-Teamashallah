@@ -111,4 +111,5 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('profile');
     }
+
 }
