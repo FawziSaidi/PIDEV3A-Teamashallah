@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
 final class DashboardController extends AbstractController
@@ -130,5 +131,22 @@ final class DashboardController extends AbstractController
             'users' => $users,
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+    #[Route('/dashboard/user/delete/{id}', name: 'app_delete_user')]
+    public function deleteUser(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'User deleted successfully.');
+
+        return $this->redirectToRoute('app_users_table');
     }
 }
