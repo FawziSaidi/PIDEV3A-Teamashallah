@@ -112,4 +112,29 @@ class UserController extends AbstractController
         return $this->redirectToRoute('profile');
     }
 
+
+    #[Route('/user/edit/{id}', name: 'app_edit_user', methods: ['POST'])]
+    public function editUser(Request $request, EntityManagerInterface $entityManager, int $id): Response
+    {
+        $user = $entityManager->getRepository(User::class)->find($id);
+    
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+    
+        $user->setFirstName($request->request->get('firstName'));
+        $user->setLastName($request->request->get('lastName'));
+        $user->setEmail($request->request->get('email'));
+        
+        // Update roles
+        $newRole = $request->request->get('role');
+        $user->setRoles([$newRole]);
+    
+        $entityManager->flush();
+    
+        $this->addFlash('success', 'User updated successfully.');
+    
+        return $this->redirectToRoute('app_users_table');
+    }
+
 }
