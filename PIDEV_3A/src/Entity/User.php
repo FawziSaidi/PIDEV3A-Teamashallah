@@ -33,6 +33,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: "Email is required")]
+    #[Assert\Email(message: "The email '{{ value }}' is not a valid email.")]
     protected ?string $email = null;
 
     /**
@@ -49,19 +51,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(groups: ['Student'])]
+    #[Assert\Length(min: 2, max: 50, minMessage: "First name must be at least {{ limit }} characters long", maxMessage: "First name cannot be longer than {{ limit }} characters")]
     protected ?string $first_name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(groups: ['Student'])]
+    #[Assert\Length(min: 2, max: 50, minMessage: "Last name must be at least {{ limit }} characters long", maxMessage: "Last name cannot be longer than {{ limit }} characters")]
     protected ?string $last_name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     protected ?string $avatar = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255, maxMessage: "Bio cannot be longer than {{ limit }} characters")]
     protected ?string $bio = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Regex(
+        pattern: "/^\+216\d{8}$/",
+        message: "Invalid Tunisian phone number format. It should be +216 followed by 8 digits."
+    )]
     protected ?string $phone_number = null;
 
     #[ORM\Column(length: 255, nullable: true)]

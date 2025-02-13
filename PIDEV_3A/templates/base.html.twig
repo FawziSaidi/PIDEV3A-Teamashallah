@@ -131,7 +131,7 @@
 <!-- /header -->
 {% endblock %}
 
-<!-- Modal -->
+<!-- Registration Modal -->
 <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content rounded-0 border-0 p-4">
@@ -143,7 +143,7 @@
             </div>
             <div class="modal-body">
                 <div class="login">
-                    {{ form_start(registrationForm) }}
+                    {{ form_start(registrationForm, {'attr': {'id': 'registration-form'}}) }}
                         {{ form_row(registrationForm.role, {
                             label: 'Role',
                             'attr': {'class': 'form-control', 'id': 'registration_form_role'}
@@ -152,15 +152,19 @@
                         <div id="common-fields" style="display: none;">
                             {{ form_row(registrationForm.email) }}
                             {{ form_row(registrationForm.plainPassword, {
-                                label: 'Password'
+                                label: 'Password',
+                                'attr': {'class': 'form-control', 'id': 'registration_form_plainPassword'}
                             }) }}
                             {{ form_row(registrationForm.first_name) }}
                             {{ form_row(registrationForm.last_name) }}
                             {{ form_row(registrationForm.bio) }}
-                            {{ form_row(registrationForm.phone_number) }}
+                            {{ form_row(registrationForm.phone_number, {
+                                'attr': {'placeholder': '+216xxxxxxxx'}
+                            }) }}
                             {{ form_row(registrationForm.adress) }}
                             {{ form_row(registrationForm.avatar) }}
                         </div>
+
 
                         <div id="student-fields" style="display: none;">
                             {{ form_row(registrationForm.date_of_birth) }}
@@ -225,6 +229,90 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'ROLE_HRM_STAGE':
                 hrmStageFields.style.display = 'block';
                 break;
+        }
+    });
+
+    // Live Validation
+    var form = document.getElementById('registration-form');
+    var inputs = form.querySelectorAll('input, textarea, select');
+
+    inputs.forEach(function(input) {
+        input.addEventListener('input', function() {
+            validateField(input);
+        });
+    });
+
+    function validateField(input) {
+        var errorElement = input.nextElementSibling;
+        if (!errorElement || !errorElement.classList.contains('invalid-feedback')) {
+            errorElement = document.createElement('div');
+            errorElement.classList.add('invalid-feedback');
+            input.parentNode.insertBefore(errorElement, input.nextSibling);
+        }
+
+        var validationResults = getValidationResults(input);
+
+        if (validationResults.isValid) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+            errorElement.innerHTML = '';
+        } else {
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+            errorElement.innerHTML = validationResults.messages.join('<br>');
+        }
+    }
+
+    function getValidationResults(input) {
+        var isValid = true;
+        var messages = [];
+
+        if (!input.validity.valid) {
+            isValid = false;
+            messages.push(input.validationMessage);
+        }
+
+        // Custom validation rules based on Symfony Assert constraints
+        switch (input.id) {
+            case 'registration_form_email':
+                if (!isValidEmail(input.value)) {
+                    isValid = false;
+                    messages.push('Please enter a valid email address.');
+                }
+                break;
+            case 'registration_form_plainPassword':
+                if (input.value.length < 6) {
+                    isValid = false;
+                    messages.push('Password must be at least 6 characters long.');
+                }
+                break;
+            case 'registration_form_phone_number':
+                if (!isValidPhoneNumber(input.value)) {
+                    isValid = false;
+                    messages.push('Please enter a valid phone number (format: +216xxxxxxxx).');
+                }
+                break;
+        }
+
+        return { isValid: isValid, messages: messages };
+    }
+
+    function isValidEmail(email) {
+        // Email REGEX
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function isValidPhoneNumber(phone) {
+        // Phone number validation for tounis
+        return /^\+216\d{8}$/.test(phone);
+    }
+
+    // Prevent form submission if there are invalid fields
+    form.addEventListener('submit', function(event) {
+        var invalidInputs = form.querySelectorAll('.is-invalid');
+        if (invalidInputs.length > 0) {
+            event.preventDefault();
+            alert('Please correct the errors in the form before submitting.');
         }
     });
 });
