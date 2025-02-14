@@ -65,7 +65,7 @@
       <p><strong>Available places: </strong> {{ event.availableSeats }}</p>
       <div class="mt-3">
         <a href="{{ path('UpdateEvent', {'id': event.id}) }}" class="btn btn-sm btn-primary">Update</a>
-        <a href="{{ path('DeleteEvent', {'id': event.id}) }}" class="btn btn-sm btn-danger">Delete</a>
+        <a href="{{ path('DeleteEvent', {'id': event.id}) }}" class="btn btn-sm btn-primary" style="background-color: #1e1e4b; ">Delete</a>
       </div>
     </div>
   </div>

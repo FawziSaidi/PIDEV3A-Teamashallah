@@ -105,7 +105,7 @@
                 'about.html': 'About',
                 'courses.html': 'COURSES',
                 'ListOfEvents': 'EVENTS',
-                'blog.html': 'Offers',
+                'blog.html': 'BLOG',
                 'contact.html': 'CONTACT'
                 } %}
                 <li class="nav-item">
@@ -218,49 +218,25 @@
       </div>
     </div>
     <!-- page title -->
-   <section class="page-title-section overlay"
+    <section class="page-title-section overlay"
       data-background="{{ asset('images/backgrounds/page-title.jpg') }}">
       <div class="container">
         <div class="row">
           <div class="col-md-8">
             <ul class="list-inline custom-breadcrumb">
-              <li class="list-inline-item"><a
-                  class="h2 text-primary font-secondary" href="courses.html">Events</a></li>
+              <li class="list-inline-item">
+              {% block title %}<a
+                  class="h2 text-primary font-secondary" href="courses.html">Add an event</a> {% endblock %}</li>
               <li class="list-inline-item text-white h3 font-secondary "></li>
             </ul>
-            <p class="text-lighten">The events page connects students with exciting workshops, networking sessions, and career fairs, helping you build meaningful connections and expand your professional horizons. </p>
-            
-            <!-- Search Form & Add Event Button -->
-            <label for="search" class="text-white">Search</label>
-            <div class="row align-items-center">
-              <div class="col-md-9">
-                <form method="post" action="/SearchEvent">
-                  <div class="input-group">
-                    <input type="text" name="title" id="search" class="form-control" placeholder="Search event...">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                  </div>
-                </form>
-              </div>
-              <div class="col-md-3 d-flex align-items-stretch">
-                <!-- Add Event Button (Same Height as Search Bar) -->
-                <a href="{{ path('AddEvent') }}" class="btn btn-lg text-white px-4 shadow-sm w-100 h-100 d-flex align-items-center justify-content-center"
-                   style="background-color: #ffbc3b; ">
-                  Add Event
-                </a>
-                <!-- /Add Event Button -->
-              </div>
-            </div>
-            <!-- /Search Form & Add Event Button -->
+              
+
 
           </div>
         </div>
       </div>
     </section>
-
-
-
     <!-- /page title -->
-
 
     <!-- courses -->
     <section class="section">
@@ -271,7 +247,7 @@
 
           
           <!-- Block Event -->
-          {% block events %}
+          {% block add %}
           <div class="col-lg-4 col-sm-6 mb-5">
             <div class="card p-0 border-primary rounded-0 hover-shadow">
               <img class="card-img-top rounded-0"
@@ -286,14 +262,14 @@
                     <a class="text-color" href="#">Humanities</a>
                   </li>
                 </ul>
-                <a href="{{ path('course_single') }}">
+                {# <a href="{{ path('course_single') }}"> #}
                   <h4 class="card-title">Programming</h4>
                 </a>
                 <p class="card-text mb-4">
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna.
                 </p>
-                <a href="{{ path('course_single') }}"
+                {# <a href="{{ path('course_single') }}" #}
                   class="btn btn-primary btn-sm">Apply now</a>
               </div>
             </div>
@@ -317,7 +293,7 @@
               <!-- logo -->
               <a class="logo-footer" href="index.html"><img
                   class="img-fluid mb-4" src="{{ asset('images/logo.png') }}" alt="logo"></a>
-              {# <ul class="list-unstyled">
+              <ul class="list-unstyled">
                 <li class="mb-2">23621 15 Mile Rd #C104, Clinton MI, 48035, New
                   York, USA</li>
                 <li class="mb-2">+1 (2) 345 6789</li>
@@ -381,9 +357,9 @@
             </div>
           </div>
         </div>
-      </div> #}
+      </div>
       <!-- copyright -->
-      {# <div class="copyright py-4 bg-footer">
+      <div class="copyright py-4 bg-footer">
         <div class="container">
           <div class="row">
             <div class="col-sm-7 text-sm-left text-center">
@@ -413,7 +389,7 @@
             </div>
           </div>
         </div>
-      </div> #}
+      </div>
     </footer>
 
     <!-- jQuery -->

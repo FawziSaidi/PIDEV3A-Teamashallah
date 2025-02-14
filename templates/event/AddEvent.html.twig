@@ -1,7 +1,67 @@
 {% extends 'event/BaseAddEvent.html.twig' %}
 
-{% block add %}
-{{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }} 
-{{form(form)}}
+{% block title %} 
+<a
+                  class="h2 text-primary font-secondary" href="courses.html">Add an event</a>
+{% endblock %}
 
+{% block add %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>Add an Event</h3>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
+            
+            <div class="mb-3">
+                {{ form_label(form.title, 'Title', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.title) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.description) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.details, 'Details', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.details, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.details) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.location, 'Location', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.location, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.location) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.available_seats, 'Available Seats', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.available_seats, {'attr': {'class': 'form-control', 'type': 'number', 'min': '1'}}) }}
+                <div class="text-danger">{{ form_errors(form.available_seats) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.date, {'attr': {'class': 'form-control', 'type': 'date'}}) }}
+                <div class="text-danger">{{ form_errors(form.date) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.poster, 'Poster', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.poster, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.poster) }}</div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Add Event</button>
+            </div>
+            
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
 {% endblock %}

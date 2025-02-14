@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -15,11 +17,15 @@ class Reservation
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false, name:'event_id',referencedColumnName:'id')]
-    private ?event $event_id = null;
+    private ?Event $event_id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $reservation_status = null;
 
+    #[Assert\GreaterThanOrEqual(
+        value: 1,
+        message: 'Available seats should be greater than or equal to {{ compared_value }}',
+    )]
     #[ORM\Column]
     private ?int $number_of_seats = null;
 

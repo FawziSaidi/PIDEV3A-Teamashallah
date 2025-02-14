@@ -23,7 +23,7 @@ class EventType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('poster', FileType::class, ['mapped'=> false])
-            ->add('save',SubmitType::class)
+            
         ;
     }
 

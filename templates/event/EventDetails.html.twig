@@ -55,7 +55,8 @@
         </ul>
     </div>
     <div class="col-lg-3 text-lg-right text-left">
-        <a href="#" class="btn btn-primary">Reserve now</a>
+        <a href="{{ path('AddReservation', {'id': event.id}) }}" class="btn btn-primary">Reserve now</a>
+        <a href="{{ path('EventReservations', {'id': event.id}) }}" class="btn btn-sm btn-primary">See Reservations</a>
     </div>
 
                 <!-- border -->
