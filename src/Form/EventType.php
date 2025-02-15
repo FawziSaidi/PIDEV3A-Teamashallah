@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotBlankValidator;
 
 class EventType extends AbstractType
 { 
@@ -22,9 +24,13 @@ class EventType extends AbstractType
             ->add('date', null, [
                 'widget' => 'single_text',
             ])
-            ->add('poster', FileType::class, ['mapped'=> false])
-            
-        ;
+            ->add('poster', FileType::class, [
+                'mapped' => false,
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'You must select a poster']),
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

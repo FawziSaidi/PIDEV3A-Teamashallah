@@ -83,7 +83,7 @@ public function UpdateEvent(Request $request, EventRepository $eventRepository, 
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        $photo=$form['poster']->getData();
+        $photo = $form->get('poster')->getData();
 
         if ($photo) {
             $newFilename = uniqid().'.'.$photo->guessExtension();

@@ -72,8 +72,8 @@ class Event
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    // #[Assert\NotBlank]
-    #[ORM\Column(length: 255)]
+    // #[Assert\NotBlank(message: 'You must select a poster')]
+    #[ORM\Column(length: 255 )]
     private ?string $poster = null;
 
     /**
