@@ -1,0 +1,54 @@
+{% extends 'application/Base_Application_List.html.twig' %}
+{% block app %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>Applications for "{{ offer.title }}"</h3>
+        </div>
+        <div class="card-body">
+            <!-- Offer Details -->
+            <div class="mb-4">
+                <p><strong>Type:</strong> {{ offer.type }}</p>
+                <p><strong>Duration:</strong> {{ offer.duration }}</p>
+                <p><strong>Publication Date:</strong> {{ offer.publicationDate|date('Y-m-d') }}</p>
+                <p><strong>Expiration Date:</strong> {{ offer.expirationDate|date('Y-m-d') }}</p>
+                <p><strong>Total Applications:</strong> {{ applications|length }}</p>
+            </div>
+
+            <!-- Applications Table -->
+            <table class="table table-bordered table-striped">
+                <thead style="background-color: #1e1e4b; color: white;" class="text-center">
+                    <tr>
+                        <th>ID</th>
+                        <th>Application Date</th>
+                        <th>Status</th>
+                        <th>Cover Letter</th>
+                        <th>CV</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                        <tr>
+                            <td>{{ application.id }}</td>
+                            <td>{{ application.applicationDate|date('Y-m-d') }}</td>
+                            <td>{{ application.status }}</td>
+                            <td>{{ application.coverLetter }}</td>
+                            <td class="text-center">
+                                {% if application.cvPath %}
+                                    <a href="{{ asset('uploads/cv_application/' ~ application.cvPath) }}" target="_blank" class="btn btn-sm btn-success">View CV</a>
+                                {% else %}
+                                    <span class="text-muted">No CV uploaded</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">No applications found for this offer.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
