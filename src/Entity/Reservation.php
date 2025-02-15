@@ -16,7 +16,7 @@ class Reservation
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: false, name:'event_id',referencedColumnName:'id')]
+    #[ORM\JoinColumn(nullable: false, name:'event_id',referencedColumnName:'id', onDelete: 'CASCADE')]
     private ?Event $event_id = null;
 
     #[ORM\Column(length: 255)]

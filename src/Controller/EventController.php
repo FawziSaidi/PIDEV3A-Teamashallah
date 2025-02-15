@@ -73,22 +73,28 @@ final class EventController extends AbstractController
     #[Route("/UpdateEvent/{id}", name: 'UpdateEvent')]
 public function UpdateEvent(Request $request, EventRepository $eventRepository, ManagerRegistry $doctrine, $id, #[Autowire('%poster_dir%')] string $poster_dir): Response
 {
-    
     $event = $eventRepository->find($id);
     if (!$event) {
         throw $this->createNotFoundException('Event not found');
     }
-    $form = $this->createForm(EventType::class, $event);
 
+    // Stocker le nom du fichier existant
+    $oldPoster = $event->getPoster();
+
+    $form = $this->createForm(EventType::class, $event);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
         $photo = $form->get('poster')->getData();
 
         if ($photo) {
+            // Générer un nouveau nom de fichier
             $newFilename = uniqid().'.'.$photo->guessExtension();
-            $photo->move($poster_dir,$newFilename);
+            $photo->move($poster_dir, $newFilename);
             $event->setPoster($newFilename);
+        } else {
+            // Si aucun fichier n'est envoyé, conserver l'ancien poster
+            $event->setPoster($oldPoster);
         }
 
         $entityManager = $doctrine->getManager();
@@ -97,11 +103,11 @@ public function UpdateEvent(Request $request, EventRepository $eventRepository, 
         return $this->redirectToRoute('ListOfEvents');
     }
 
-    
     return $this->render('event/UpdateEvent.html.twig', [
         'form' => $form->createView(),
     ]);
 }
+
 
 #[Route('/SearchEvent', name: 'SearchEvent')]
 public function SearchEvent(EntityManagerInterface $em, Request $request, EventRepository $repo): Response
