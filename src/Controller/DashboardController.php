@@ -9,6 +9,8 @@ use App\Entity\HrmClub;
 use App\Entity\HrmStage;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
+use App\Repository\OfferRepository;
+use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -149,4 +151,24 @@ final class DashboardController extends AbstractController
 
         return $this->redirectToRoute('app_users_table');
     }
+
+    #[Route('/dashboard/offers', name: 'app_offers_table')]
+    public function offersTable(OfferRepository $offerRepository): Response
+    {
+        $offers = $offerRepository->findAll();
+
+        return $this->render('dashboard/offers_table.html.twig', [
+            'offers' => $offers,
+        ]);
+    }  
+
+    #[Route('/dashboard/events', name: 'app_events_management')]
+    public function eventsManagement(EventRepository $eventRepository): Response
+    {
+        $events = $eventRepository->findAll();
+
+        return $this->render('dashboard/events_table.html.twig', [
+            'events' => $events,
+        ]);
+    } 
 }
