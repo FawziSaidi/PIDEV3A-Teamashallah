@@ -1,0 +1,40 @@
+{% extends 'application/Base_Application_List.html.twig' %}
+{% block app %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>Your Reservations</h3>
+        </div>
+        <div class="card-body">
+            <!-- Reservations Table -->
+            <table class="table table-bordered table-striped">
+                <thead style="background-color: #1e1e4b; color: white;" class="text-center">
+                    <tr>
+                        <th>Event Title</th>
+                        <th>Reservation Status</th>
+                        <th>Number of Seats</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservations %}
+                        <tr>
+                            <td>{{ reservation.eventId.title }}</td>
+                            <td>{{ reservation.reservationStatus }}</td>
+                            <td class="text-center">{{ reservation.numberOfSeats }}</td>
+                            <td class="text-center">
+                                <a href="{{ path('UpdateReservation', {'idReservation': reservation.id, 'idEvent': reservation.eventId.id}) }}" class="btn btn-sm btn-primary">Update</a>
+                                <a href="{{ path('DeleteReservation', {'idReservation': reservation.id, 'idEvent': reservation.eventId.id}) }}" class="btn btn-sm btn-primary" style="background-color: #1e1e4b;">Delete</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">You have not made any reservations yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

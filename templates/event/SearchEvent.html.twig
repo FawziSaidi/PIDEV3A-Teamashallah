@@ -1,0 +1,92 @@
+{% extends 'event/BaseListOfEvents.html.twig' %}
+
+{% block events %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mr-4">LIST OF EVENTS</h1>
+        <div class="d-flex">
+		{% if is_granted('ROLE_STUDENT') %}
+                <a href="{{ path('Reservation_List_Student') }}" class="btn btn-secondary btn-lg mr-4">
+                    <i class="ti-eye"></i> See My Reservations
+                </a>
+            {% endif %}
+            {% if is_granted('ROLE_HRM_CLUB') %}
+                <a href="{{ path('AddEvent') }}" class="btn btn-primary btn-lg mr-4">
+                    <i class="ti-plus"></i> Add Event
+                </a>
+                <button id="toggleEventView" class="btn btn-info">
+                    See all events
+                </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row" id="eventList">
+        {% for event in events %}
+            <div class="col-lg-4 col-sm-6 mb-5 event-item" data-hrm-id="{{ event.hrmClub.id }}">
+                <div class="card border-0 rounded-0 hover-shadow">
+                    <div class="card-img position-relative">
+                        <img class="card-img-top rounded-0" src="{{ asset('uploads/images/' ~ event.poster) }}" alt="Affiche de l'événement">
+                        <div class="card-date">
+                            <span>{{ event.date|date('d') }}</span><br>{{ event.date|date('F') }}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- location -->
+                        <p>
+                            <i class="ti-location-pin text-primary mr-2"></i>
+                            {{ event.location }}
+                        </p>
+                        <a href="{{ path('EventDetails', {'id': event.id}) }}">
+                            <h4 class="card-title">{{ event.title }}</h4>
+                        </a>
+                        <p>{{ event.description|slice(0, 100) ~ '...' }}</p>
+                        <p>
+                            <strong>Available places:</strong>
+                            {{ event.availableSeats }}
+                        </p>
+                        <div class="mt-3">
+                            {% if is_granted('ROLE_HRM_CLUB') and app.user and app.user.id == event.hrmClub.id %}
+                                <a href="{{ path('UpdateEvent', {'id': event.id}) }}" class="btn btn-sm btn-primary">Update</a>
+                                <a href="{{ path('DeleteEvent', {'id': event.id}) }}" class="btn btn-sm btn-primary" style="background-color: #1e1e4b;">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center">No events available at the moment.</p>
+        {% endfor %}
+    </div>
+
+    {% if is_granted('ROLE_HRM_CLUB') %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const toggleButton = document.getElementById('toggleEventView');
+                const eventList = document.getElementById('eventList');
+                let showOnlyMyEvents = true;
+
+                function updateEventVisibility() {
+                    const eventItems = eventList.querySelectorAll('.event-item');
+                    const currentUserId = '{{ app.user.id }}';
+
+                    eventItems.forEach(item => {
+                        if (showOnlyMyEvents) {
+                            item.style.display = item.dataset.hrmId === currentUserId ? '' : 'none';
+                        } else {
+                            item.style.display = '';
+                        }
+                    });
+                }
+
+                toggleButton.addEventListener('click', function () {
+                    showOnlyMyEvents = !showOnlyMyEvents;
+                    toggleButton.textContent = showOnlyMyEvents ? 'See all events' : 'See only my events';
+                    updateEventVisibility();
+                });
+
+                // Initially show only the current HRMClub's events
+                updateEventVisibility();
+            });
+        </script>
+    {% endif %}
+{% endblock %}

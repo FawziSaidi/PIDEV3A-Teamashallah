@@ -1,0 +1,50 @@
+{% extends 'application/Base_Application_List.html.twig' %}
+{% block app %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>Your Applications</h3>
+        </div>
+        <div class="card-body">
+            <!-- Applications Table -->
+            <table class="table table-bordered table-striped">
+                <thead style="background-color: #1e1e4b; color: white;" class="text-center">
+                    <tr>
+                        <th>Offer Title</th>
+                        <th>Application Date</th>
+                        <th>Status</th>
+                        <th>Cover Letter</th>
+                        <th>CV</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                        <tr>
+                            <td>{{ application.offer.title }}</td>
+                            <td>{{ application.applicationDate|date('Y-m-d') }}</td>
+                            <td>{{ application.status }}</td>
+                            <td>{{ application.coverLetter }}</td>
+                            <td class="text-center">
+                                {% if application.cvPath %}
+                                    <a href="{{ asset('uploads/cv_application/' ~ application.cvPath) }}" target="_blank" class="btn btn-sm btn-success">View CV</a>
+                                {% else %}
+                                    <span class="text-muted">No CV uploaded</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                 <a href="{{ path('Update_Application', {'id': application.id}) }}" class="btn btn-sm btn-primary">Update</a> 
+                                <a href="{{ path('Delete_Application', {'id': application.id}) }}" class="btn btn-sm btn-primary" style="background-color: #1e1e4b;">Delete</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">You have not applied to any offers yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

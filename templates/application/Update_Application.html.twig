@@ -1,0 +1,32 @@
+{% extends 'application/Base_Add_Application.html.twig' %}
+
+{% block add %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>Apply for {{ offer.title }}</h3>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
+            
+            <div class="mb-3">
+                {{ form_label(form.cv_path, 'CV Path', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.cv_path, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.cv_path) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.cover_letter, 'Cover Letter', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.cover_letter, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.cover_letter) }}</div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit Application</button>
+            </div>
+            
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

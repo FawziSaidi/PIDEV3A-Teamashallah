@@ -1,0 +1,78 @@
+{% extends 'event/BaseEventDetails.html.twig' %}
+
+{% block event %}
+    <section class="section-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="section-title">{{ event.title }}</h2>
+                </div>
+                <!-- event image -->
+                <div class="col-12 mb-4">
+                    <img src="{{ asset('uploads/images/' ~ event.poster) }}" alt="{{ event.title }}" class="img-fluid w-100">
+                </div>
+            </div>
+            <!-- event info -->
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-9">
+                    <ul class="list-inline">
+                        <li class="list-inline-item mr-xl-5 mr-4 mb-3 mb-lg-0">
+                            <div class="d-flex align-items-center">
+                                <i class="ti-location-pin text-primary icon-md mr-2"></i>
+                                <div class="text-left">
+                                    <h6 class="mb-0">LOCATION</h6>
+                                    <p class="mb-0">{{ event.location }}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-inline-item mr-xl-5 mr-4 mb-3 mb-lg-0">
+                            <div class="d-flex align-items-center">
+                                <i class="ti-calendar text-primary icon-md mr-2"></i>
+                                <div class="text-left">
+                                    <h6 class="mb-0">DATE</h6>
+                                    <p class="mb-0">{{ event.date|date('F-d-Y') }}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-inline-item mr-xl-5 mr-4 mb-3 mb-lg-0">
+                            <div class="d-flex align-items-center">
+                                <i class="ti-time text-primary icon-md mr-2"></i>
+                                <div class="text-left">
+                                    <h6 class="mb-0">TIME</h6>
+                                    <p class="mb-0">{{ event.date|date('h:i A') }}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-inline-item mr-xl-5 mr-4 mb-3 mb-lg-0">
+                            <div class="d-flex align-items-center">
+                                <i class="ti-ticket text-primary icon-md mr-2"></i>
+                                <div class="text-left">
+                                    <h6 class="mb-0">AVAILABLE SEATS</h6>
+                                    <p class="mb-0">{{ event.availableSeats }}</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 text-lg-right text-left">
+                    {% if is_granted('ROLE_HRM_CLUB') %}
+                        <a href="{{ path('EventReservations', {'id': event.id}) }}" class="btn btn-primary">See Reservations</a>
+                    {% elseif is_granted('ROLE_STUDENT') %}
+                        <a href="{{ path('AddReservation', {'id': event.id}) }}" class="btn btn-primary">Reserve Now</a>
+                    {% endif %}
+                </div>
+                <!-- border -->
+                <div class="col-12 mt-4 order-4">
+                    <div class="border-bottom border-primary"></div>
+                </div>
+            </div>
+            <!-- event details -->
+            <div class="row">
+                <div class="col-12 mb-50">
+                    <h3>About Event</h3>
+                    <p>{{ event.details }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

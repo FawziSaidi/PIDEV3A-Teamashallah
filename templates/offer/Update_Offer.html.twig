@@ -1,0 +1,62 @@
+{% extends 'offer/Base_Add_Offer.html.twig' %}
+
+{% block add %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>Add an Offer</h3>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'needs-validation'}}) }}
+            
+            <div class="mb-3">
+                {{ form_label(form.title, 'Title', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.title) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.poster, 'Poster (Image file)', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.poster, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.poster) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.description) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.duration, 'Duration', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.duration, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.duration) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.expiration_date, 'Expiration Date', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.expiration_date, {'attr': {'class': 'form-control', 'type': 'date'}}) }}
+                <div class="text-danger">{{ form_errors(form.expiration_date) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.type, 'Type', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.type, {'attr': {'class': 'form-check'}}) }}
+                <div class="text-danger">{{ form_errors(form.type) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.desired_skills, 'Desired Skills', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.desired_skills, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(form.desired_skills) }}</div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Update Offer</button>
+            </div>
+            
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
