@@ -11,6 +11,7 @@ use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Repository\OfferRepository;
 use App\Repository\EventRepository;
+use App\Repository\ForumRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -169,6 +170,17 @@ final class DashboardController extends AbstractController
 
         return $this->render('dashboard/events_table.html.twig', [
             'events' => $events,
+        ]);
+    } 
+
+
+    #[Route('/dashboard/forums', name: 'app_forums_management')]
+    public function forumsManagement(ForumRepository $forumRepository): Response
+    {
+        $events = $forumRepository->findAll();
+
+        return $this->render('dashboard/forums_table.html.twig', [
+            'forums' => $events,
         ]);
     } 
 }

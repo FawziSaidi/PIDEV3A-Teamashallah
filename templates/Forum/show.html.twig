@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ forum.titleForum }}</h1>
+    <p><strong>Category:</strong> {{ forum.category }}</p>
+    <p>{{ forum.descriptionForum }}</p>
+    <p><small>Created at: {{ forum.createdAt|date('Y-m-d H:i') }}</small></p>
+    <p><small>Updated at: {{ forum.updatedAt ? forum.updatedAt|date('Y-m-d H:i') : 'Not updated' }}</small></p>
+    <a href="{{ path('forum_edit', {'id': forum.id}) }}">Edit</a>
+    <form method="post" action="{{ path('forum_delete', {'id': forum.id}) }}" onsubmit="return confirm('Are you sure?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ forum.id) }}">
+        <button type="submit">Delete</button>
+    </form>
+    <a href="{{ path('forum_index') }}">Back to list</a>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Thread{% endblock %}
+
+{% block body %}
+<h1>Create a New Thread</h1>
+
+
+
+
+
+{{ form_start(form) }}
+    {{ form_row(form.threadContent) }}
+    {{ form_row(form.createdAt) }}
+    {{ form_row(form.forum) }}
+    <button class="btn">Create</button>
+{{ form_end(form) }}
+
+{% endblock %}

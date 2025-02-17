@@ -1,0 +1,47 @@
+{% extends 'Forum/baseforumuser.html.twig' %}
+
+{% block body %}
+
+<section class="section">
+  <div class="container">
+    <div class="row">
+      {% for forum in forums %}
+        <!-- Blog post -->
+        <article class="col-lg-4 col-sm-6 mb-5">
+          <div class="card rounded-0 border-bottom border-primary border-top-0 border-left-0 border-right-0 hover-shadow">
+            <div class="card-body">
+              
+              <!-- Post Title -->
+              <a href="blog-single.html">
+                <h4 class="card-title">{{ forum.titleForum }}</h4>
+              </a>
+
+              <!-- Post Meta (Category) -->
+              <ul class="list-inline mb-3">
+                <li class="list-inline-item mr-3 ml-0"><strong>Category:</strong> {{ forum.category }}</li>
+              </ul>
+
+              <!-- Post Description -->
+              <p class="card-text">{{ forum.descriptionForum }}</p>
+
+              <!-- Dates (Created At & Updated At) - Moved Below the Description -->
+              <div class="mt-3 text-muted small">
+                <p class="mb-1"><strong>Created At:</strong> {{ forum.createdAt|date('F j, Y') }}</p>
+                <p class="mb-1"><strong>Updated At:</strong> {{ forum.updatedAt|date('F j, Y') }}</p>
+              </div>
+
+              <!-- Read More Button (Kept the same) -->
+              <a href="{{ path('app_thread_index', { id: forum.id }) }}" class="btn btn-primary btn-sm">read more</a>
+            </div>
+          </div>
+        </article>
+      {% else %}
+        <div class="col-12 text-center">
+          <p>No forums available.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
