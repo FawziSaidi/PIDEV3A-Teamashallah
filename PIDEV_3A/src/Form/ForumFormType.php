@@ -9,6 +9,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 class ForumFormType extends AbstractType  
 {
@@ -17,7 +19,8 @@ class ForumFormType extends AbstractType
         $builder
             ->add('titleForum', TextType::class, [
                 'label' => 'Title',
-                'required' => false
+                'required' => false,
+                
             ])
             ->add('descriptionForum', TextareaType::class, [
                 'label' => 'Description',

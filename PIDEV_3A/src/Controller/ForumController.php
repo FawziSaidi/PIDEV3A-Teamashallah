@@ -13,10 +13,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/forum')]
+use App\Entity\Thread;
+use App\Entity\Reply;
+use App\Repository\ThreadRepository;
+use App\Repository\ReplyRepository;
+
+use Psr\Log\LoggerInterface;
+
+use App\Repository\CommentRepository;
 final class ForumController extends AbstractController
 {
-    #[Route('/', name: 'forum_index', methods: ['GET', 'POST' ])]
+    #[Route('/forum', name: 'forum_index', methods: ['GET', 'POST' ])]
     public function index(Request $request, ForumRepository $forumRepository, EntityManagerInterface $entityManager): Response
     {
         $forums = $forumRepository->findAll();
@@ -36,33 +43,54 @@ final class ForumController extends AbstractController
     
     }
 
-    #[Route('/create', name: 'forum_create', methods: ['POST'])]
+   
+/*
+
+    #[Route('/userforums', name: 'forum_indexuser', methods: ['GET', 'POST' ])]
+    public function userForums(Request $request, ForumRepository $forumRepository, EntityManagerInterface $entityManager): Response
+    {
+        $forums = $forumRepository->findAll();
+
+        return $this->render('forum/forumuser.html.twig', [
+            'forums' => $forums,
+         
+        ]);
+    
+    }*/
+
+    #[Route('/forum/create', name: 'forum_create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $forum = new Forum();
         $form = $this->createForm(ForumFormType::class, $forum);
-
         $form->handleRequest($request);
-if ($form->isSubmitted() && $form->isValid()) { 
+    
+        if ($form->isSubmitted() && $form->isValid()) { 
             $forum->setCreatedAt(new \DateTimeImmutable());
             $entityManager->persist($forum);
             $entityManager->flush();
-
+    
             return $this->json(['status' => 'success']);
-        }else {
+        } else {
             $errors = [];
+    
+            // Collecting errors for each field
             foreach ($form->getErrors(true) as $error) {
-                $errors[] = $error->getMessage();
+                $fieldName = $error->getOrigin()->getName(); // Get the field name
+                $errors[$fieldName] = $error->getMessage(); // Assign error to corresponding field
             }
-            return $this->json(['status' => 'error', 'message' => $errors]);
+    
+            return $this->json([
+                'status' => 'error',
+                'errors' => $errors
+            ]);
         }
-
-        return $this->json(['status' => 'error']);
     }
+    
     
   
     
-    #[Route('/edit/{id}', name: 'forum_edit', methods: ['POST'])]
+    #[Route('/forum/edit/{id}', name: 'forum_edit', methods: ['POST'])]
 public function edit(Request $request, Forum $forum, EntityManagerInterface $entityManager): Response
 {
     // here iam validating the incoming data
@@ -117,15 +145,19 @@ public function edit(Request $request, Forum $forum, EntityManagerInterface $ent
         'message' => 'Forum updated successfully'
     ]);
 }
-    #[Route('/{id}', name: 'forum_show', methods: ['GET'])]
+
+
+
+
+   /* #[Route('/forum/{id}', name: 'forum_show', methods: ['GET'])]
     public function show(Forum $forum): Response
     {
         return $this->render('forum/show.html.twig', [
             'forum' => $forum,
         ]);
-    }
+    }*/
 
-    #[Route('/{id}', name: 'forum_delete', methods: ['POST'])]
+    #[Route('/forum/{id}', name: 'forum_delete', methods: ['POST'])]
     public function delete(Request $request, Forum $forum, ForumRepository $forumRepository, EntityManagerInterface $entityManager)
     {
         if ($this->isCsrfTokenValid('delete' . $forum->getId(), $request->request->get('_token'))) {
@@ -149,4 +181,138 @@ $this->render('forum/index.html.twig', [
 'createForm' => $createForm->createView(),
 'editForm' => $editForm->createView(),
 ]);    }
+
+
+
+
+// Thread and reply handling
+
+
+#[Route('/user/thread/{id}', name: 'app_thread_index')]
+    public function indexx(int $id,ThreadRepository $threadRepository): Response
+    {
+        $threads = $threadRepository->findBy(['forum' => $id]);
+
+        return $this->render('thread/index.html.twig', [
+            'threads' => $threads,
+            'forum_id' => $id
+            
+        ]);
+        
+    }
+
+    #[Route('/user/userforums', name: 'forum_indexuser', methods: ['GET', 'POST' ])]
+    public function userForums(Request $request, ForumRepository $forumRepository, EntityManagerInterface $entityManager): Response
+    {
+        $forums = $forumRepository->findAll();
+
+        return $this->render('forum/forumuser.html.twig', [
+            'forums' => $forums,
+         
+        ]);
+    
+    }
+
+    #[Route('/user/new', name: 'app_thread_new', methods: ['GET', 'POST'])]
+public function new(Request $request, EntityManagerInterface $entityManager, ForumRepository $forumRepository): Response
+{
+    if ($request->isMethod('POST')) {
+        $threadContent = $request->request->get('thread-content');
+        $forumId = $request->request->get('forum_id'); // Add a hidden input for forum ID in the form
+       // $user = $this->getUser(); // Ensure the user is logged in
+
+    
+
+        $forum = $forumRepository->find($forumId);
+        if (!$forum) {
+            throw $this->createNotFoundException('Forum not found.');
+        }
+
+        $thread = new Thread();
+        $thread->setThreadContent($threadContent);
+       // $thread->setUser($user); // Associate the thread with the logged-in user
+        $thread->setForum($forum); // Associate the thread with the forum
+        $thread->setCreatedAt(new \DateTimeImmutable());
+
+        $entityManager->persist($thread);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_thread_index', ['id' => $forumId]);
+    }
+
+    return $this->render('thread/new.html.twig');
+}
+
+
+#[Route('/user/thread/{id}/reply', name: 'app_thread_reply', methods: ['POST'])]
+public function addReply(Request $request, Thread $thread, EntityManagerInterface $entityManager , LoggerInterface $logger): Response
+{
+    $content = $request->request->get('reply-content');
+
+    if ($content) {
+        $reply = new Reply();
+        $reply->setReplyContent($content);
+        $reply->setThread($thread);
+        $reply->setCreatedAt(new \DateTimeImmutable());
+
+        $entityManager->persist($reply);
+        $entityManager->flush();
+    }
+
+    return $this->redirectToRoute('app_thread_index', ['id' => $thread->getForum()->getId()]);
+}
+
+ 
+   
+
+    #[Route('/user/reply/edit/{id}', name: 'app_reply_edit', methods: ['POST'])]
+    public function editr(Request $request, ReplyRepository $replyRepository, Reply $reply,EntityManagerInterface $entityManager): Response
+    {
+        if (!$reply) {
+            return new JsonResponse(['error' => 'Reply not found'], Response::HTTP_NOT_FOUND);
+        }
+    
+        // Get the submitted form data
+        $content = $request->request->get('content');
+    
+        if (empty(trim($content))) {
+            return new JsonResponse(['error' => 'Content cannot be empty'], Response::HTTP_BAD_REQUEST);
+        }
+    
+        $reply->setreplyContent($content);
+        $entityManager->flush();
+    
+        return $this->redirectToRoute('app_thread_index', ['id' => $reply->getThread()->getForum()->getId()]);
+    }
+    
+    
+
+    #[Route('/user/{id}/deleter', name: 'app_reply_delete', methods: ['POST'])]
+    public function deletereply(Request $request, Reply $reply, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
+    {
+        $csrfToken = $request->request->get('_token');
+        $logger->info('CSRF Token: ' . $csrfToken);
+        $logger->info('Expected CSRF Token: ' . 'delete' . $reply->getId());
+    
+      
+    
+        $entityManager->remove($reply);
+        $entityManager->flush();
+    
+        $logger->info('Reply deleted successfully.');
+    
+        return $this->redirectToRoute('app_thread_index', ['id' => $reply->getThread()->getForum()->getId()]);
+    }
+
+    #[Route('/user/{id}/delete', name: 'app_thread_delete', methods: ['POST'])]
+    public function deletet(Request $request, Thread $thread, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $thread->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($thread);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_thread_index', ['id' => $thread->getForum()->getId()]);
+    }
+
 }

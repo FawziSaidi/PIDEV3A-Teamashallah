@@ -1,0 +1,307 @@
+{% extends 'thread/basethread.html.twig' %}
+
+{% block title %}Hello ThreadController!{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .create-thread {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .create-thread textarea {
+        width: 90%;
+        height: 50px;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        resize: vertical;
+        margin-bottom: 12px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        color: #333;
+        background-color: #fafafa;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .create-thread textarea:focus {
+        border-color: rgb(63, 30, 3);
+        outline: none;
+        background-color: #fff;
+        box-shadow: 0 0 8px rgba(63, 30, 3, 0.2);
+    }
+    .create-thread button {
+        background-color: rgb(70, 30, 6);
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+    .create-thread button:hover {
+        background-color: rgb(52, 23, 3);
+    }
+    .thread-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .user-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 12px;
+    }
+    .username {
+        font-weight: bold;
+        margin: 0;
+        color: #333;
+    }
+    .timestamp {
+        font-size: 12px;
+        color: #666;
+        margin-right: 10px;
+    }
+    .options-menu {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+    }
+    .dropdown-menu .delete-btn {
+        background: none;
+        border: none;
+        color: red;
+        cursor: pointer;
+        padding: 5px 10px;
+        width: 100%;
+        text-align: left;
+        font-size: 14px;
+    }
+    .dropdown-menu .delete-btn:hover {
+        background: #f8d7da;
+    }
+    .actions {
+        display: flex;
+        gap: 16px;
+    }
+    .action-btn {
+        background: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #666;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+    .action-btn:hover {
+        color: rgb(68, 37, 3);
+    }
+    .comment-section {
+        margin-top: 12px;
+        display: none; /* Hide by default */
+    }
+    .comment-input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-top: 8px;
+        font-size: 14px;
+        color: #333;
+        background-color: #fafafa;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .comment-input:focus {
+        border-color: rgb(69, 29, 7);
+        outline: none;
+        background-color: #fff;
+        box-shadow: 0 0 8px rgba(69, 29, 7, 0.2);
+    }
+    .replies-section {
+        margin-top: 12px;
+        display: none; /* Hide by default */
+    }
+    .reply {
+        margin-top: 8px;
+        padding: 8px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+    .reply small {
+        color: #666;
+    }
+</style>
+
+<div class="container">
+    <!-- Create Thread Section -->
+    <div class="create-thread">
+        <form action="{{ path('app_thread_new') }}" method="POST">
+            <textarea name="thread-content" placeholder="What's on your mind?" required></textarea>
+            <input type="hidden" name="forum_id" value="{{ forum_id }}">
+            <button type="submit">Post Thread</button>
+        </form>
+    </div>
+
+    <!-- Thread Cards -->
+    {% for thread in threads %}
+        <div class="thread-card">
+            <!-- User Info -->
+            <div class="user-info">
+                <div style="display: flex; align-items: center;">
+                    <img src="{{ asset('assets/img/team-3.jpg') }}" alt="User Avatar" class="user-avatar">
+                    <p class="ml-2 mb-0" style="padding: 8px;"><strong>John gilbert</strong></p>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <p class="timestamp">{{ thread.createdAt|date("Y-m-d H:i") }}</p>
+                    <div class="options-menu">
+                        <i class="fas fa-ellipsis-v" style="cursor: pointer; margin-left: 10px;" onclick="toggleMenu(this)"></i>
+                        <div class="dropdown-menu">
+                            <form action="{{ path('app_thread_delete', {'id': thread.id}) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this thread?');">
+                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ thread.id) }}">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thread Content -->
+            <div class="thread-content">
+                <p>{{ thread.threadContent }}</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <form action="{{ path('app_thread_like', {'id': thread.id}) }}" method="POST">
+                    <button type="submit" class="action-btn">
+                        <i class="fas fa-heart"></i>
+                        <span>Like</span>
+                    </button>
+                </form>
+                <button class="action-btn" onclick="toggleCommentSection(this)">
+                    <i class="fas fa-comment"></i>
+                    <span>Comment</span>
+                </button>
+                <button class="action-btn" onclick="toggleRepliesSection(this)">
+                    <i class="fas fa-comments"></i>
+                    <span>See Comments</span>
+                </button>
+            </div>
+
+            <!-- Comment Section -->
+            <div class="comment-section">
+                <form method="POST" action="{{ path('app_thread_reply', {'id': thread.id}) }}">
+                    <textarea name="reply-content" class="comment-input" placeholder="Write a comment..." required></textarea>
+                    <button type="submit" class="create-thread button">Add Reply</button>
+                </form>
+            </div>
+
+            <!-- Replies Section -->
+            <div class="replies-section" >
+                {% for reply in thread.replies %}
+                    <div class="reply" data-reply-id="{{ reply.id }}">
+                        <p class="reply-content">{{ reply.replyContent }}</p>
+                        <small>Posted on {{ reply.createdAt|date('Y-m-d H:i') }}</small>
+                        <div class="options-menu" style="display: inline-block; margin-left: 10px;">
+                <i class="fas fa-ellipsis-v" style="cursor: pointer;" onclick="toggleMenu(this)"></i>
+                <div class="dropdown-menu">
+                    <!-- Edit Option -->
+
+ <button class="btn btn-warning btn-sm" onclick="toggleEditForm({{ reply.id }})">Edit</button>
+
+    <form id="edit-form-{{ reply.id }}" action="{{ path('app_reply_edit', {'id': reply.id}) }}" method="post" style="display: none;">
+        <input type="text" name="content" value="{{ reply.replyContent }}" class="form-control mb-2">
+        <button type="submit" class="btn btn-success btn-sm">Update</button>
+    </form>
+    
+                      <!-- Delete Option -->
+                    <form action="{{ path('app_reply_delete', {'id': reply.id}) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this reply?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reply.id) }}">
+
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+            </div>
+                    </div>
+                {% else %}
+                    <p>No replies yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p>No forums available.</p>
+    {% endfor %}
+</div>
+
+<script>
+
+
+function toggleEditForm(replyId) {
+            let form = document.getElementById('edit-form-' + replyId);
+            form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+        }
+
+    function toggleMenu(icon) {
+        let menu = icon.nextElementSibling;
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    function toggleCommentSection(button) {
+        let commentSection = button.closest('.thread-card').querySelector('.comment-section');
+        commentSection.style.display = commentSection.style.display === "block" ? "none" : "block";
+    }
+
+    function toggleRepliesSection(button) {
+        let repliesSection = button.closest('.thread-card').querySelector('.replies-section');
+        repliesSection.style.display = repliesSection.style.display === "block" ? "none" : "block";
+        button.querySelector('span').textContent = repliesSection.style.display === "block" ? "See Less" : "See Comments";
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function(event) {
+        let menus = document.querySelectorAll(".dropdown-menu");
+        menus.forEach(menu => {
+            if (!menu.parentElement.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    });
+</script>
+{% endblock %}

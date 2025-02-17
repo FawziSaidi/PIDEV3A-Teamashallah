@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Thread{% endblock %}
+
+{% block body %}
+<h1>Edit Thread</h1>
+
+{{ form_start(form) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.content) }}
+    <button class="btn">Save Changes</button>
+{{ form_end(form) }}
+{% endblock %}
