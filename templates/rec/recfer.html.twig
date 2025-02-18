@@ -1,0 +1,8 @@
+{% extends 'front/base.html.twig' %}
+{% block body %}
+{{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+    {{ form_widget(form) }}
+    {{ form_errors(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+    <br><br><br><br>
+{% endblock %}

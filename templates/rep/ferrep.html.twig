@@ -1,0 +1,32 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Reponse index{% endblock %}
+
+{% block body %}
+    <h1>Reponse index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+           
+                <th>Rep</th>
+                <th>Date</th>
+           
+            </tr>
+        </thead>
+        <tbody>
+        {% for reponse in reponses %}
+            <tr>
+               
+                <td>{{ reponse.rep }}</td>
+                <td>{{ reponse.date ? reponse.date|date('Y-m-d') : '' }}</td>
+                
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

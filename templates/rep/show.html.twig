@@ -1,0 +1,30 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Reponse{% endblock %}
+
+{% block body %}
+    <h1>Reponse</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ reponse.id }}</td>
+            </tr>
+            <tr>
+                <th>Rep</th>
+                <td>{{ reponse.rep }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ reponse.date ? reponse.date|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_rep_index') }}">back to list</a>
+
+    <a href="{{ path('app_rep_edit', {'id': reponse.id}) }}">edit</a>
+
+    {{ include('rep/_delete_form.html.twig') }}
+{% endblock %}
