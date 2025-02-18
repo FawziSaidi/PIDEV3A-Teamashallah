@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lesson List{% endblock %}
+
+{% block body %}
+    <div class="container mt-5 pt-5">
+        <h1 class="text-center my-4">Lesson List</h1>
+
+        <a href="{{ path('lesson_new') }}" class="btn btn-primary mb-4">Create New Lesson</a>
+
+        <div class="row">
+            {% for lesson in lessons %}
+                <div class="col-md-4 mb-4 d-flex align-items-stretch">
+                    <div class="card h-100">
+                        {% if lesson.thumbnail %}
+                            <img src="{{ asset('uploads/thumbnails/' ~ lesson.thumbnail) }}" class="card-img-top" alt="{{ lesson.title }}">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ lesson.title }}</h5>
+                            <p class="card-text">{{ lesson.description|slice(0, 100) ~ '...' }}</p>
+                            <p class="card-text"><strong>Duration:</strong> {{ lesson.duration }} minutes</p>
+                            <p class="card-text"><strong>Course:</strong> {{ lesson.course.title }}</p>
+                            <div class="mt-auto">
+                                <a href="{{ path('lesson_show', {'id': lesson.id}) }}" class="btn btn-primary">View Details</a>
+                                <a href="{{ path('lesson_edit', {'id': lesson.id}) }}" class="btn btn-warning">Edit</a>
+                                <form method="post" action="{{ path('lesson_delete', {'id': lesson.id}) }}" style="display:inline-block;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ lesson.id) }}">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <p class="text-center">No lessons found.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/lesson.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/lesson.js') }}"></script>
+{% endblock %}

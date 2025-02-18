@@ -1,0 +1,20 @@
+<header>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="container">
+            <a href="{{ path('home') }}" class="logo" aria-label="Homepage">MyWebsite</a>
+            <ul class="nav-links">
+                <li><a href="{{ path('home') }}" aria-label="Home">Home</a></li>
+                <li><a href="{{ path('events') }}" aria-label="Events">Events</a></li>
+                <li><a href="{{ path('blog') }}" aria-label="Blog">Blog</a></li>
+                <li><a href="{{ path('contact') }}" aria-label="Contact">Contact</a></li>
+                <li><a href="{{ path('register') }}" aria-label="Register">Register</a></li>
+                <li><a href="{{ path('login') }}" aria-label="Login">Login</a></li>
+            </ul>
+            <button class="burger" aria-label="Toggle navigation">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </button>
+        </div>
+    </nav>
+</header>

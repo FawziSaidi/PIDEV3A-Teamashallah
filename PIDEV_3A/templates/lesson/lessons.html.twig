@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lessons for {{ course.title }}{% endblock %}
+
+{% block body %}
+    <h1>Lessons for {{ course.title }}</h1>
+
+    <a href="{{ path('lesson_new', {'courseId': course.id}) }}" class="btn btn-primary mb-3">Add Lesson</a>
+
+    <ul>
+        {% for lesson in lessons %}
+            <li>
+                {{ lesson.name }}
+                <a href="{{ path('lesson_show', {'id': lesson.id}) }}">View</a>
+                <a href="{{ path('lesson_edit', {'id': lesson.id}) }}">Edit</a>
+                <form method="post" action="{{ path('lesson_delete', {'id': lesson.id}) }}" style="display:inline-block;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ lesson.id) }}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </li>
+        {% else %}
+            <li>No lessons found</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('course_show', {'id': course.id}) }}" class="btn btn-secondary">Back to Course</a>
+{% endblock %}

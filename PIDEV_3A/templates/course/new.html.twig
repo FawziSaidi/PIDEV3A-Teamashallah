@@ -1,0 +1,124 @@
+{# filepath: templates/course/new.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Create New Course{% endblock %}
+
+{% block body %}
+    <h1 style="padding-top: 100px;">Create New Course</h1>
+
+    <div style="padding-top: 20px;">
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
+            <div class="form-group">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title) }}
+                {{ form_errors(form.title) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+                {{ form_errors(form.description) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.about) }}
+                {{ form_widget(form.about) }}
+                {{ form_errors(form.about) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.teacher) }}
+                {{ form_widget(form.teacher) }}
+                {{ form_errors(form.teacher) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.category) }}
+                {{ form_widget(form.category) }}
+                {{ form_errors(form.category) }}
+            </div>
+            <div class="form-group" id="personalizedCategoryField" style="display: none;">
+                {{ form_label(form.personalizedCategory) }}
+                {{ form_widget(form.personalizedCategory) }}
+                {{ form_errors(form.personalizedCategory) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.university) }}
+                {{ form_widget(form.university) }}
+                {{ form_errors(form.university) }}
+            </div>
+            <div class="form-group" id="customUniversityField" style="display: none;">
+                {{ form_label(form.customUniversity) }}
+                {{ form_widget(form.customUniversity) }}
+                {{ form_errors(form.customUniversity) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.thumbnail) }}
+                {{ form_widget(form.thumbnail) }}
+                {{ form_errors(form.thumbnail) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.startDate) }}
+                {{ form_widget(form.startDate) }}
+                {{ form_errors(form.startDate) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.duration) }}
+                {{ form_widget(form.duration) }}
+                {{ form_errors(form.duration) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.isPaid) }}
+                {{ form_widget(form.isPaid) }}
+                {{ form_errors(form.isPaid) }}
+            </div>
+            <div class="form-group" id="priceField" style="display: none;">
+                {{ form_label(form.price) }}
+                {{ form_widget(form.price) }}
+                {{ form_errors(form.price) }}
+            </div>
+            <button class="btn btn-primary">{{ button_label|default('Save Course') }}</button>
+            <a href="{{ path('course_index') }}" class="btn btn-secondary">Back to list</a>
+        {{ form_end(form) }}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var categoryField = document.querySelector('#course_category');
+            var personalizedCategoryField = document.querySelector('#personalizedCategoryField');
+            var universityField = document.querySelector('#course_university');
+            var customUniversityField = document.querySelector('#customUniversityField');
+            var isPaidField = document.querySelector('#course_isPaid');
+            var priceField = document.querySelector('#priceField');
+
+            function togglePersonalizedCategoryField() {
+                if (categoryField.value === 'other') {
+                    personalizedCategoryField.style.display = 'block';
+                } else {
+                    personalizedCategoryField.style.display = 'none';
+                }
+            }
+
+            function toggleCustomUniversityField() {
+                if (universityField.value === 'Other') {
+                    customUniversityField.style.display = 'block';
+                } else {
+                    customUniversityField.style.display = 'none';
+                }
+            }
+
+            function togglePriceField() {
+                if (isPaidField.value === '1') {
+                    priceField.style.display = 'block';
+                } else {
+                    priceField.style.display = 'none';
+                }
+            }
+
+            categoryField.addEventListener('change', togglePersonalizedCategoryField);
+            universityField.addEventListener('change', toggleCustomUniversityField);
+            isPaidField.addEventListener('change', togglePriceField);
+
+            togglePersonalizedCategoryField();
+            toggleCustomUniversityField();
+            togglePriceField();
+        });
+    </script>
+{% endblock %}

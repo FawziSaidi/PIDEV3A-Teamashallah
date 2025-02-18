@@ -1,5 +1,36 @@
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+    resource: ../src/Controller/
     type: attribute
+
+courses:
+    path: /courses
+    controller: App\Controller\CourseController::index
+
+course_delete:
+    path: /course/delete/{id}
+    controller: App\Controller\CourseController::delete
+    methods: [DELETE, POST, GET]
+
+course_lessons:
+    path: /course/{id}/lessons
+    controller: App\Controller\CourseController::lessons
+
+events:
+    path: /events
+    controller: App\Controller\EventsController::index
+
+blog:
+    path: /blog
+    controller: App\Controller\BlogController::index
+
+contact:
+    path: /contact
+    controller: App\Controller\ContactController::index
+
+register:
+    path: /register
+    controller: App\Controller\RegisterController::index
+
+login:
+    path: /login
+    controller: App\Controller\LoginController::index

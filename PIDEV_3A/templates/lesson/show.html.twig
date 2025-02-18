@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lesson Details{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Lesson Details</h1>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2 class="card-title">{{ lesson.title }}</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Name</th>
+                            <td>{{ lesson.name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Title</th>
+                            <td>{{ lesson.title }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Description</th>
+                            <td>{{ lesson.description }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Duration</th>
+                            <td>{{ lesson.duration }} minutes</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Content</th>
+                            <td>{{ lesson.content }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Course</th>
+                            <td>{{ lesson.course.title }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Video URL</th>
+                            <td>{{ lesson.videoUrl }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">PDF</th>
+                            <td>{{ lesson.pdf }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">PPT</th>
+                            <td>{{ lesson.ppt }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Has Quizzes</th>
+                            <td>{{ lesson.hasQuizzes ? 'Yes' : 'No' }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Quiz URL</th>
+                            <td>{{ lesson.quizUrl }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{{ path('lesson_edit', {'id': lesson.id}) }}" class="btn btn-primary">Edit Lesson</a>
+                    <form method="post" action="{{ path('lesson_delete', {'id': lesson.id}) }}" style="display:inline-block;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ lesson.id) }}">
+                        <button type="submit" class="btn btn-danger">Delete Lesson</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <a href="{{ path('lesson_index') }}" class="btn btn-secondary mt-4">Back to list</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ course.title }}</h1>
+    <p>{{ course.description }}</p>
+
+    <div style="padding-top: 40px;">
+        <h2>Lessons</h2>
+        {% if lessons|length > 0 %}
+            <ul>
+                {% for lesson in lessons %}
+                    <li>{{ lesson.title }}: {{ lesson.about }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No lessons available.</p>
+        {% endif %}
+
+        <a href="{{ path('lesson_new', {id: course.id}) }}">Add Lesson</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create New Lesson{% endblock %}
+
+{% block body %}
+    <h1 style="padding-top: 100px;">Create New Lesson</h1>
+
+    <div style="padding-top: 20px;">
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
+            <div class="form-group">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+                {{ form_errors(form.name) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title) }}
+                {{ form_errors(form.title) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+                {{ form_errors(form.description) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.duration) }}
+                {{ form_widget(form.duration) }}
+                {{ form_errors(form.duration) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.content) }}
+                {{ form_widget(form.content) }}
+                {{ form_errors(form.content) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.course) }}
+                {{ form_widget(form.course) }}
+                {{ form_errors(form.course) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.thumbnail) }}
+                {{ form_widget(form.thumbnail) }}
+                {{ form_errors(form.thumbnail) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.videoUrl) }}
+                {{ form_widget(form.videoUrl) }}
+                {{ form_errors(form.videoUrl) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.pdf) }}
+                {{ form_widget(form.pdf) }}
+                {{ form_errors(form.pdf) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.ppt) }}
+                {{ form_widget(form.ppt) }}
+                {{ form_errors(form.ppt) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.hasQuizzes) }}
+                {{ form_widget(form.hasQuizzes) }}
+                {{ form_errors(form.hasQuizzes) }}
+            </div>
+            <div class="form-group d-none" id="quizUrlField">
+                {{ form_label(form.quizUrl) }}
+                {{ form_widget(form.quizUrl) }}
+                {{ form_errors(form.quizUrl) }}
+            </div>
+            <button class="btn btn-primary">{{ button_label|default('Save Lesson') }}</button>
+            <a href="{{ path('lesson_index') }}" class="btn btn-secondary">Back to list</a>
+        {{ form_end(form) }}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var hasQuizzesField = document.querySelector('#lesson_hasQuizzes');
+            var quizUrlField = document.querySelector('#quizUrlField');
+
+            function toggleQuizUrlField() {
+                if (hasQuizzesField.checked) {
+                    quizUrlField.classList.remove('d-none');
+                } else {
+                    quizUrlField.classList.add('d-none');
+                }
+            }
+
+            hasQuizzesField.addEventListener('change', toggleQuizUrlField);
+            toggleQuizUrlField();
+        });
+    </script>
+{% endblock %}

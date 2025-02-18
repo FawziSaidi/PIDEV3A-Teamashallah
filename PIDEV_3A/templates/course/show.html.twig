@@ -1,0 +1,97 @@
+{# filepath: templates/course/show.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Course Details{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Course Details</h1>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2 class="card-title">{{ course.title }}</h2>
+            </div>
+            <div class="card-body">
+                <div class="course-thumbnail mb-3 text-center">
+                    {% if course.thumbnail %}
+                        <img src="{{ asset('uploads/thumbnails/' ~ course.thumbnail) }}" alt="{{ course.title }}" class="img-fluid rounded">
+                    {% else %}
+                        <p>No thumbnail available</p>
+                    {% endif %}
+                </div>
+
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Title</th>
+                            <td>{{ course.title }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Description</th>
+                            <td>{{ course.description }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">About</th>
+                            <td>{{ course.about }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Category</th>
+                            <td>{{ course.category }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">University</th>
+                            <td>{{ course.university }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Start Date</th>
+                            <td>{{ course.startDate|date('Y-m-d') }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Duration</th>
+                            <td>{{ course.duration }} weeks</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Is Paid</th>
+                            <td>{{ course.isPaid ? 'Yes' : 'No' }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Price</th>
+                            <td>{{ course.price }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{{ path('course_edit', {'id': course.id}) }}" class="btn btn-primary">Edit Course</a>
+                    <form method="post" action="{{ path('course_delete', {'id': course.id}) }}" style="display:inline-block;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ course.id) }}">
+                        <button type="submit" class="btn btn-danger">Delete Course</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="mb-3">Lessons</h2>
+        <a href="{{ path('lesson_new', {'courseId': course.id}) }}" class="btn btn-primary mb-3">Add Lesson</a>
+        <ul class="list-group">
+            {% for lesson in course.lessons %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ lesson.name }}
+                    <div>
+                        <a href="{{ path('lesson_show', {'id': lesson.id}) }}" class="btn btn-info btn-sm">View</a>
+                        <a href="{{ path('lesson_edit', {'id': lesson.id}) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form method="post" action="{{ path('lesson_delete', {'id': lesson.id}) }}" style="display:inline-block;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ lesson.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                </li>
+            {% else %}
+                <li class="list-group-item">No lessons found</li>
+            {% endfor %}
+        </ul>
+
+        <a href="{{ path('course_index') }}" class="btn btn-secondary mt-4">Back to list</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Course{% endblock %}
+
+{% block body %}
+    <h1 style="padding-top: 100px;">Edit Course</h1>
+
+    <div class="container mt-5" style="padding-top: 20px;">
+        {{ form_start(form, {'action': path('course_edit', {'id': course.id})}) }}
+            {{ form_errors(form) }}
+            <div class="form-group">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.title) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.description) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.about) }}
+                {{ form_widget(form.about, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.about) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.teacher) }}
+                {{ form_widget(form.teacher, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.teacher) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.university) }}
+                {{ form_widget(form.university, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.university) }}
+            </div>
+            <div class="form-group d-none" id="customUniversityField">
+                {{ form_label(form.customUniversity) }}
+                {{ form_widget(form.customUniversity, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.customUniversity) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.category) }}
+                {{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.category) }}
+            </div>
+            <div class="form-group d-none" id="personalizedCategoryField">
+                {{ form_label(form.personalizedCategory) }}
+                {{ form_widget(form.personalizedCategory, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.personalizedCategory) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.duration) }}
+                {{ form_widget(form.duration, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.duration) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.startDate) }}
+                {{ form_widget(form.startDate, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.startDate) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.isPaid) }}
+                {{ form_widget(form.isPaid, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.isPaid) }}
+            </div>
+            <div class="form-group d-none" id="priceField">
+                {{ form_label(form.price) }}
+                {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.price) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.thumbnail) }}
+                {{ form_widget(form.thumbnail, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.thumbnail) }}
+            </div>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('course_show', {'id': course.id}) }}" class="btn btn-secondary mt-3">Back to course details</a>
+        <a href="{{ path('course_index') }}" class="btn btn-secondary mt-3">Back to list</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var categoryField = document.querySelector('#course_category');
+            var personalizedCategoryField = document.querySelector('#personalizedCategoryField');
+            var universityField = document.querySelector('#course_university');
+            var customUniversityField = document.querySelector('#customUniversityField');
+            var isPaidField = document.querySelector('#course_isPaid');
+            var priceField = document.querySelector('#priceField');
+
+            function togglePersonalizedCategoryField() {
+                if (categoryField.value === 'other') {
+                    personalizedCategoryField.classList.remove('d-none');
+                } else {
+                    personalizedCategoryField.classList.add('d-none');
+                }
+            }
+
+            function toggleCustomUniversityField() {
+                if (universityField.value === 'Other') {
+                    customUniversityField.classList.remove('d-none');
+                } else {
+                    customUniversityField.classList.add('d-none');
+                }
+            }
+
+            function togglePriceField() {
+                if (isPaidField.value === '1') {
+                    priceField.classList.remove('d-none');
+                } else {
+                    priceField.classList.add('d-none');
+                }
+            }
+
+            categoryField.addEventListener('change', togglePersonalizedCategoryField);
+            universityField.addEventListener('change', toggleCustomUniversityField);
+            isPaidField.addEventListener('change', togglePriceField);
+
+            togglePersonalizedCategoryField();
+            toggleCustomUniversityField();
+            togglePriceField();
+        });
+    </script>
+{% endblock %}
