@@ -132,7 +132,7 @@ class Offer
         return $this->expiration_date;
     }
 
-    public function setExpirationDate(\DateTimeInterface $expiration_date): static
+    public function setExpirationDate(?\DateTimeInterface $expiration_date): static
     {
         $this->expiration_date = $expiration_date;
 

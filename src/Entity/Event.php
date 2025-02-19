@@ -69,7 +69,7 @@ class Event
     #[Assert\GreaterThan('today',
         message: 'The selected date must be in the future'
     )]
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
 
     // #[Assert\NotBlank(message: 'You must select a poster')]
@@ -160,7 +160,7 @@ class Event
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
 

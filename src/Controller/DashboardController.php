@@ -23,7 +23,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
+use App\Repository\ApplicationRepository;
+use App\Repository\ReservationRepository;
 
 final class DashboardController extends AbstractController
 {
@@ -78,7 +79,7 @@ final class DashboardController extends AbstractController
                     break;
                 case 'ROLE_HRM_CLUB':
                     $user = new HrmClub();
-                    $user->setEvent($form->get('event')->getData());
+                    $user->setClub($form->get('event')->getData());
                     break;
                 case 'ROLE_HRM_STAGE':
                     $user = new HrmStage();
@@ -162,6 +163,22 @@ final class DashboardController extends AbstractController
             'offers' => $offers,
         ]);
     }  
+    #[Route('/dashboard/offerDetail/{id}', name: 'Offer_Details_Dashboard')]
+    public function offerDetails(int $id, OfferRepository $offerRepository, ApplicationRepository $applicationRepository): Response
+    {
+        $offer = $offerRepository->find($id);
+    
+        if (!$offer) {
+            throw $this->createNotFoundException('Offer not found');
+        }
+    
+        $applications = $applicationRepository->findBy(['offer' => $offer]);
+    
+        return $this->render('dashboard/offer_details.html.twig', [
+            'offer' => $offer,
+            'applications' => $applications,
+        ]);
+    }
 
     #[Route('/dashboard/events', name: 'app_events_management')]
     public function eventsManagement(EventRepository $eventRepository): Response
@@ -172,6 +189,23 @@ final class DashboardController extends AbstractController
             'events' => $events,
         ]);
     } 
+
+    #[Route('/dashboard/eventDetail/{id}', name: 'Event_Details_Dashboard')]
+    public function eventDetails(int $id, EventRepository $eventRepository, ReservationRepository $reservationRepository): Response
+    {
+        $event = $eventRepository->find($id);
+    
+        if (!$event) {
+            throw $this->createNotFoundException('Event not found');
+        }
+    
+        $reservations = $reservationRepository->findBy(['event_id' => $event]);
+    
+        return $this->render('dashboard/event_details.html.twig', [
+            'event' => $event,
+            'reservations' => $reservations,
+        ]);
+    }
 
 
     #[Route('/dashboard/forums', name: 'app_forums_management')]
