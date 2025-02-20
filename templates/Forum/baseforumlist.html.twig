@@ -2,9 +2,6 @@
 <html lang="zxx">
 	<head>
 		{% include '/partials/head.html.twig' %}
-		  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" 
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
 
 	<body>
@@ -85,23 +82,18 @@
 					<div class="col-md-8">
 						<ul class="list-inline custom-breadcrumb">
 							<li class="list-inline-item">
-								<a class="h2 text-primary font-secondary">
-																{% block tt %} 
-																{% endblock %}
-</a>
+								<a class="h2 text-primary font-secondary" href="courses.html">Our Offers</a>
 							</li>
 							<li class="list-inline-item text-white h3 font-secondary "></li>
 						</ul>
-						<p class="text-lighten" style="text-align: justify;"> 	
-													{% block description %}  {% endblock %}
-</p>
+						<p class="text-lighten" style="text-align: justify;">Our job and internship offers strike a balance between structured recruitment criteria and the flexibility to accommodate diverse candidate profiles, ensuring opportunities for both students and professionals.</p>
 					</div>
 				</div>
 				<!-- Search Form -->
 				<form method="post" action="/Search_Offer" class="mt-3">
 					<label for="search" class="text-white">Search</label>
 					<div class="input-group">
-						<input type="text" name="title" id="search" class="form-control" placeholder="Search thread...">
+						<input type="text" name="title" id="search" class="form-control" placeholder="Search offer...">
 						<div class="input-group-append">
 							<button type="submit" class="btn btn-primary">Search</button>
 						</div>
@@ -113,9 +105,21 @@
 		</section>
 		<!-- /page title -->
 
-		{% block body %}
+		<!-- offers -->
+		<section class="section">
+			<div
+				class="container">
 
-{% endblock %}
+				<!-- offer list -->
+				<div class="row justify-content-center"> 
+				{% block Offer_List %}
+				{% endblock %}
+				</div>
+				<!-- end offer list -->
+
+				</div>
+			</section>
+			<!-- /offers -->
 
 			<footer>
 				{% include '/partials/footer.html.twig' %}

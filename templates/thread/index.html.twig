@@ -1,6 +1,19 @@
 {% extends 'thread/basethread.html.twig' %}
 
-{% block title %}Hello ThreadController!{% endblock %}
+  {% block tt %}
+        {{ forums.titleForum }}
+
+
+ {% endblock %}
+
+
+{% block description %}
+
+ 
+ {{forums.descriptionForum}} 
+
+
+{% endblock %}
 
 {% block body %}
 <style>
@@ -167,28 +180,39 @@
 
 <div class="container">
     <!-- Create Thread Section -->
+                        {% if app.user is not null %}
+
     <div class="create-thread">
-        <form action="{{ path('app_thread_new') }}" method="POST">
-            <textarea name="thread-content" placeholder="What's on your mind?" required></textarea>
+        <form name="form" action="{{ path('app_thread_new') }}" method="POST" novalidate>
+            <textarea name="thread-content" placeholder="What's on your mind?" ></textarea>
+        
             <input type="hidden" name="forum_id" value="{{ forum_id }}">
+
             <button type="submit" class="btn btn-sm btn-primary" style="background-color: #1e1e4b;">Post Thread</button>
         </form>
     </div>
-
+{% endif %}
     <!-- Thread Cards -->
     {% for thread in threads %}
+
+  
+
         <div class="thread-card">
+        
             <!-- User Info -->
             <div class="user-info">
                 <div style="display: flex; align-items: center;">
-                    <img src="{{ asset('assets/img/team-3.jpg') }}" alt="User Avatar" class="user-avatar">
+                 <img src="{{ asset('uploads/aminauseravatar1.png') }}" alt="User Avatar" class="user-avatar">
                     <p class="ml-2 mb-0" style="padding: 8px;"><strong>{{thread.user.firstName }} {{thread.user.lastName}}</strong></p>
                 </div>
                 <div style="display: flex; align-items: center;">
                     <p class="timestamp">{{ thread.createdAt|date("Y-m-d H:i") }}</p>
+                                            {% if app.user is not null %}
+
                      {% if  app.user.id == thread.user.id %}
                     <div class="options-menu">
-                        <i class="fas fa-ellipsis-v" style="cursor: pointer; margin-left: 10px;" onclick="toggleMenu(this)"></i>
+                        <i class="fa fa-ellipsis-v" aria-hidden="true" style="cursor: pointer; margin-left: 10px;" onclick="toggleMenu(this)"></i>
+
                         <div class="dropdown-menu">
                             <form action="{{ path('app_thread_delete', {'id': thread.id}) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this thread?');">
                                  <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ thread.id) }}">
@@ -197,6 +221,8 @@
                         </div>
                     </div>
                     {% endif %}
+                                        {% endif %}
+
                 </div>
             </div>
 
@@ -209,16 +235,16 @@
             <div class="actions">
                 <form action="{{ path('app_thread_like', {'id': thread.id}) }}" method="POST">
                     <button type="submit" class="action-btn">
-                        <i class="fas fa-heart"></i>
+<i class="fa fa-heart-o" aria-hidden="true"></i>
                         <span>Like</span>
                     </button>
                 </form>
-                <button class="action-btn" onclick="toggleCommentSection(this)">
-                    <i class="fas fa-comment"></i>
+            {% if app.user is not null %}    <button class="action-btn" onclick="toggleCommentSection(this)">
+<i class="fa fa-comment" aria-hidden="true"></i>
                     <span>Comment</span>
-                </button>
+                </button> {% endif %}
                 <button class="action-btn" onclick="toggleRepliesSection(this)">
-                    <i class="fas fa-comments"></i>
+<i class="fa fa-comments" aria-hidden="true"></i>
                     <span>See Comments</span>
                 </button>
             </div>
@@ -231,15 +257,32 @@
                 </form>
             </div>
 
+
+
+
+
+
+
             <!-- Replies Section -->
             <div class="replies-section" >
                 {% for reply in thread.replies %}
                     <div class="reply" data-reply-id="{{ reply.id }}">
+                 <img src="{{ asset('uploads/aminauseravatar1.png') }}" alt="User Avatar" class="user-avatar">
+
+                    <strong style="color:rgb(27, 17, 0); padding: 2px 5px; border-radius: 4px;">
+{{reply.user.firstName }} {{reply.user.lastName}}</strong><br><br>
                         <p class="reply-content">{{ reply.replyContent }}</p>
                         <small>Posted on {{ reply.createdAt|date('Y-m-d H:i') }}</small>
-                        {% if  app.user.id == reply.user.id %}
+                           {% if reply.updatedAt is not null %}
+        (Edited at {{ reply.updatedAt|date("Y-m-d H:i") }})
+    {% endif %}
+                                                {% if app.user is not null %}
+
+                     {% if  app.user.id == reply.user.id %}
                         <div class="options-menu" style="display: inline-block; margin-left: 10px;">
-                <i class="fas fa-ellipsis-v" style="cursor: pointer;" onclick="toggleMenu(this)"></i>
+              <!--  <i class="fas fa-ellipsis-v" style="cursor: pointer;" onclick="toggleMenu(this)"></i>-->
+                <i class="fa fa-ellipsis-v" aria-hidden="true" style="cursor: pointer; margin-left: 10px;" onclick="toggleMenu(this)"></i>
+
                 <div class="dropdown-menu">
                     <!-- Edit Option -->
 
@@ -258,7 +301,8 @@
                     </form>
                 </div>
             </div>
-            {% endif %}
+            {% endif %}            {% endif %}
+
                     </div>
                 {% else %}
                     <p>No replies yet.</p>
@@ -266,7 +310,7 @@
             </div>
         </div>
     {% else %}
-        <p>No forums available.</p>
+        <p>No threads available.</p>
     {% endfor %}
 </div>
 

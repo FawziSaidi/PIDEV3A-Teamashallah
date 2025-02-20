@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Security;
 
 final class ForumController extends AbstractController
 {
-    #[Route('/forum', name: 'forum_index', methods: ['GET', 'POST' ])]
+    #[Route('/dashboard/forum', name: 'forum_index', methods: ['GET', 'POST' ])]
     public function index(Request $request, ForumRepository $forumRepository, EntityManagerInterface $entityManager, Security $security): Response
     {
         $forums = $forumRepository->findAll();
@@ -37,7 +37,7 @@ final class ForumController extends AbstractController
         // Handle editing (if a forum is being updated)
         $editForm = $this->createForm(ForumFormType::class); 
 
-        return $this->render('Forum/index.html.twig', [
+        return $this->render('dashboard/forums_table.html.twig', [
             'forums' => $forums,
             'createForm' => $createForm->createView(),
             'editForm' => $editForm->createView(),
@@ -60,10 +60,16 @@ final class ForumController extends AbstractController
     
     }*/
 
+   
+
+   
     #[Route('/forum/create', name: 'forum_create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         $user = $security->getUser();
+
+       
+
         $forum = new Forum();
         $forum->setAdmin($user);
         $form = $this->createForm(ForumFormType::class, $forum);
@@ -73,7 +79,7 @@ final class ForumController extends AbstractController
             $forum->setCreatedAt(new \DateTimeImmutable());
             $entityManager->persist($forum);
             $entityManager->flush();
-    
+     
             return $this->json(['status' => 'success']);
         } else {
             $errors = [];
@@ -188,18 +194,21 @@ $this->render('forum/index.html.twig', [
 
 
 
-
+ 
 // Thread and reply handling
 
 
 #[Route('/user/thread/{id}', name: 'app_thread_index')]
-    public function indexx(int $id,ThreadRepository $threadRepository): Response
+    public function indexx(int $id,ThreadRepository $threadRepository ,ForumRepository $forumRepository): Response
     {
         $threads = $threadRepository->findBy(['forum' => $id]);
 
+        $forums = $forumRepository->find($id);
         return $this->render('thread/index.html.twig', [
             'threads' => $threads,
-            'forum_id' => $id
+            'forum_id' => $id,
+            'forums' => $forums
+
             
         ]);
         
@@ -263,6 +272,7 @@ public function addReply(Request $request, Thread $thread, EntityManagerInterfac
         $reply->setThread($thread);
         $reply->setCreatedAt(new \DateTimeImmutable());
 
+
         $entityManager->persist($reply);
         $entityManager->flush();
     }
@@ -286,7 +296,11 @@ public function addReply(Request $request, Thread $thread, EntityManagerInterfac
         if (empty(trim($content))) {
             return new JsonResponse(['error' => 'Content cannot be empty'], Response::HTTP_BAD_REQUEST);
         }
-    
+
+        $currentDateTime = new \DateTimeImmutable('now');
+$reply->setUpdatedAt($currentDateTime);
+
+
         $reply->setreplyContent($content);
         $entityManager->flush();
     

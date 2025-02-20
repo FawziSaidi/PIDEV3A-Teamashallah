@@ -1,16 +1,17 @@
-{% extends 'Forum/baseforum.html.twig' %}
-{% block title %}forum management interface
+{% extends 'dashboard/forums_table.html.twig' %}
+{% block cc %}
+{% block title %}Discussion management interface
 {% endblock %}
 
 
 {% block titre %}
 	<!--<h1 class="h2 text-primary font-secondary" style="font-weight: bold; margin-bottom: 1.5rem; font-size: 2.5rem; text-transform: uppercase;">
-	</h1>	-->Forum Management Panel
+	</h1>	-->Discussion Management Panel
 {% endblock %}
 
 {% block description %}
 <h3 class="h2 text-primary font-secondary" style="font-weight: bold; margin-bottom: 1.5rem; font-size: 2.5rem; text-transform: uppercase;">
-		Admin Panel for Creating, Reading, Updating, and Deleting Forums
+		Admin Panel for Creating, Reading, Updating, and Deleting Discussions
 </h3>	
 {% endblock %}
 
@@ -31,7 +32,7 @@ margin-top:220px;				   				                  margin-right: 20px;"
 			onmouseover="this.style.background='linear-gradient(45deg, #2575fc, #6a11cb)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0px 4px 10px rgba(0, 0, 0, 0.2)'"
     onmouseout="this.style.background='linear-gradient(45deg, #6a11cb, #2575fc)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'"data-bs-toggle="modal" data-bs-target="#createForumModal">
 			<i class="bi bi-plus-lg me-2"></i>
-			add Forum
+			add Discussion
 		</button>
 	</div>
 {% endblock %}
@@ -101,7 +102,7 @@ margin-top:220px;				   				                  margin-right: 20px;"
 				</div>
 
 			{% else %}
-				<p>No forums available.</p>
+				<p>No discussions available.</p>
 			{% endfor %}
 		</div>
 	</div>

@@ -31,13 +31,13 @@
               </div>
 
               <!-- Read More Button (Kept the same) -->
-              <a href="{{ path('app_thread_index', { id: forum.id }) }}" class="btn btn-primary btn-sm">read more</a>
+              <a href="{{ path('app_thread_index', { id: forum.id }) }}" class="btn btn-primary btn-sm">see more</a>
             </div>
           </div>
         </article>
       {% else %}
         <div class="col-12 text-center">
-          <p>No forums available.</p>
+          <p>No discussions available.</p>
         </div>
       {% endfor %}
     </div>

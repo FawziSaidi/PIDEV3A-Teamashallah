@@ -1,0 +1,32 @@
+{% extends 'Forum/baseforumlist.html.twig' %}
+
+{% block Offer_List %}
+	<h1>LIST OF Discussions</h1>
+	<div class="row">
+		{% for forum in forums %}
+			<div class="col-lg-4 col-sm-6 mb-5 d-flex">
+				<div class="card p-0 border-primary rounded-0 hover-shadow flex-fill">
+					<img class="card-img-top rounded-0" src="images/courses/course-1.jpg" alt="course thumb">
+					<div class="card-body d-flex flex-column">
+						<ul class="list-inline mb-2">
+							<li class="list-inline-item">
+								<i class="ti-calendar mr-1 text-color"></i>
+								{{ forum.createdAt|date('Y-m-d') }}
+							</li>
+						
+						</ul>
+						<a href="{{ path('Offer_Details', {'id': forum.id, 'title': forum.titleForum}) }}">
+							<h4 class="card-title">{{ forum.titleForum | upper }}</h4>
+						</a>
+						<p class="card-text mb-4">{{ forum.descriptionForum }}</p>
+						<div class="actions mt-auto">
+							<a href="{{ path(' ', {'id': forum.id, 'title': offer.titleForum}) }}" class="btn btn-info btn-sm w-100 mb-2">See Applications</a>
+							<a href="{{ path(' ', {'id': forum.id}) }}" class="btn btn-warning btn-sm w-100 mb-2">Update</a>
+							<a href="{{ path(' ', {'id': forum.id}) }}" class="btn btn-danger btn-sm w-100 mb-2">Delete</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}
